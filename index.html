@@ -1,1 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bar Charts</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<style>
+
+</style>
+
+<body>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+    <div>
+        <h1>Catchy Headline</h1>
+        <p>Question!!</p>
+        <svg id="chart-1" width="960" height="540"></svg>
+        <p>Question!!</p>
+        <svg id="chart-2" width="960" height="540"></svg>
+        <p>Question!!</p>
+    </div>
+</body>
+
+<script>
+    var margin = { top: 20, right: 30, bottom: 35, left: 60 },
+        width = 960 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom;
+
+    var chart1 = d3.select("#chart-1")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .attr("class", "bar-chart")
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    var chart2 = d3.select("#chart-2")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .attr("class", "bar-chart")
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    const drawAxis = (arr, width, height, max, svg) => {
+        const x = d3.scaleBand()
+            .rangeRound([0, width])
+            .padding(0.1)
+            .domain(arr.map(d => d.gender));
+
+        const y = d3.scaleLinear()
+            .rangeRound([height, 0])
+            .domain([0, max]);
+
+        svg.append("g")
+            .attr("transform", "translate(0," + (height) + ")")
+            .call(d3.axisBottom(x));
+
+        svg.append("g")
+            .call(d3.axisLeft(y));
+
+        return [x,y];
+    }
+
+    data = d3.csv('Artworks.csv').then(data => {
+        genderCount = {
+            Male: { gender: "Male", count: 0 },
+            Female: { gender: "Female", count: 0 }
+        };
+
+        data.forEach(d => {
+            const gender = d.Gender;
+
+            const maleCount = (gender.match(/(Male)/g) || []).length
+                + (gender.match(/(male)/g) || []).length
+
+            genderCount["Male"].count += maleCount;
+
+            const femaleCount = (gender.match(/(Female)/g) || []).length
+                + (gender.match(/(female)/g) || []).length
+
+            genderCount["Female"].count += femaleCount;
+
+            // const naCount = (gender.match(/( )/g) || []).length
+            // genderCount["N/A"] += naCount;
+        });
+
+        genderCount = d3.values(genderCount);
+        console.log("CSV:", genderCount);
+
+        const max = d3.max(genderCount, d => d.count);
+
+        console.log(max);
+
+        const axis = drawAxis(genderCount, width, height, max, chart1);
+
+        const x = axis[0]
+        const y = axis[1]
+
+        const entries = chart1.selectAll("g")
+            .data(genderCount)
+            .enter()
+            .append("g");
+
+        entries.each(function (d, i) {
+            console.log(d);
+            const entry = d3.select(this);
+            entry.append("rect")
+                .attr("class", "bar")
+                .attr("x", x(d.gender))
+                .attr("y", y(d.count))
+                .attr("height", height - y(d.count))
+                .attr("width", x.bandwidth())
+                .style("fill", "#eee")
+                .attr("stroke", "black")
+        })
+
+    });
+
+    data2 = d3.json('Artists.json').then(data => {
+        genderCount = {
+            Male: { gender: "Male", count: 0 },
+            Female: { gender: "Female", count: 0 }
+        };
+
+        data.forEach(d => {
+            const gender = d.Gender;
+
+            if (gender != null)
+                gender == "Male" ? genderCount["Male"].count++ : genderCount["Female"].count++;
+        });
+
+        console.log("JSON:", genderCount);
+
+        genderCount = d3.values(genderCount);
+        const max = d3.max(genderCount, d => d.count);
+
+        drawAxis(genderCount, width, height, max, chart2);
+    });
+
+
+</script>
+
+</html>
