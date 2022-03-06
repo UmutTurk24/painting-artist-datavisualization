@@ -18,8 +18,17 @@
     <script src="https://d3js.org/d3.v5.min.js"></script>
 
     <div>
-        <h1>Catchy Headline</h1>
-        <p>Question!!</p>
+        <h1>Female Representation at MoMA</h1>
+        <p>Based on this <a
+                href="https://www.tate.org.uk/art/artworks/guerrilla-girls-do-women-have-to-be-naked-to-get-into-the-met-museum-p78793"
+                target="_blank" rel="noopener noreferrer">
+                Guerrilla Girls poster</a>, we decided to investigate the gender distribution of artists exhibited at major museums. We asked the
+            question <i>"Do we lack female representation at the MoMA?"</i> To answer this, we looked at a Dataset of
+            all artworks exhibited by the MoMA up to late 2020.
+            <br>
+            We initially assumed that there would be disproportionally more male artists exhibited, a ratio confirmed by
+            this dataset.
+        </p>
         <svg id="chart1" width="960" height="540"></svg>
         <p>Question!!</p>
         <svg id="chart2" width="960" height="540"></svg>
@@ -28,10 +37,12 @@
 </body>
 
 <script>
-    var margin = { top: 20, right: 30, bottom: 35, left: 60 },
-        width = 960 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom;
+    // Constants
+    var margin = { top: 20, right: 30, bottom: 70, left: 100 },
+        width = 560 - margin.left - margin.right,
+        height = 520 - margin.top - margin.bottom;
 
+    // Chart SVGs
     var chart1 = d3.select("#chart1")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
@@ -46,7 +57,23 @@
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    const drawAxes = (arr, width, height, max, svg) => {
+    // Linear Gradient
+    const defs = chart2.append('defs');
+    const bgGradient = defs
+        .append('linearGradient')
+        .attr('id', 'bg-gradient')
+        .attr('gradientTransform', 'rotate(90)');
+    bgGradient
+        .append('stop')
+        .attr('stop-color', '#fafafa')
+        .attr('offset', '20%');
+    bgGradient
+        .append('stop')
+        .attr('stop-color', 'lightblue')
+        .attr('offset', '100%');
+
+    // Draw Axes and Bars
+    const draw = (arr, min = 0, max, svg) => {
         const x = d3.scaleBand()
             .rangeRound([0, width])
             .padding(0.1)
@@ -54,7 +81,23 @@
 
         const y = d3.scaleLinear()
             .rangeRound([height, 0])
-            .domain([0, max]);
+            .domain([min, max]);
+
+        const entries = svg.selectAll("g")
+            .data(genderCount)
+            .enter()
+            .append("g");
+
+        entries.each(function (d) {
+            const entry = d3.select(this);
+            entry.append("rect")
+                .attr("class", "bar")
+                .attr("x", x(d.gender))
+                .attr("y", y(d.count))
+                .attr("height", height - y(d.count))
+                .attr("width", x.bandwidth())
+                .style("fill", d => d.color)
+        })
 
         svg.append("g")
             .attr("transform", "translate(0," + (height) + ")")
@@ -62,14 +105,29 @@
 
         svg.append("g")
             .call(d3.axisLeft(y));
+    }
 
-        return { x, y };
+    const drawAxisLabels = (svg) => {
+        svg.append("text")
+            .attr("class", "x-label")
+            .attr("text-anchor", "middle")
+            .attr("x", width / 2)
+            .attr("y", height + margin.bottom * 0.65)
+            .text("Artists Gender");
+
+        svg.append("text")
+            .attr("class", "y-label")
+            .attr("text-anchor", "middle")
+            .attr("transform", "rotate(-90)")
+            .attr("x", -height / 2)
+            .attr("y", -margin.left * 0.6)
+            .text("Number of Artists");
     }
 
     data = d3.csv('Artworks.csv').then(data => {
         genderCount = {
-            Male: { gender: "Male", count: 0 },
-            Female: { gender: "Female", count: 0 }
+            Male: { gender: "Male", count: 0, color: "lightblue" },
+            Female: { gender: "Female", count: 0, color: "lightblue" }
         };
 
         data.forEach(d => {
@@ -84,59 +142,40 @@
                 + (gender.match(/(female)/g) || []).length
 
             genderCount["Female"].count += femaleCount;
-
-            // const naCount = (gender.match(/( )/g) || []).length
-            // genderCount["N/A"] += naCount;
         });
 
         genderCount = d3.values(genderCount);
-        console.log("CSV:", genderCount);
 
         const max = d3.max(genderCount, d => d.count);
 
-        const { x, y } = drawAxes(genderCount, width, height, max, chart1);
+        draw(genderCount, 18000, max, chart1);
 
-        const entries = chart1.selectAll("g")
-            .data(genderCount)
-            .enter()
-            .append("g");
-
-        entries.each(function (d) {
-            const entry = d3.select(this);
-            console.log(entry);
-            entry.append("rect")
-                .attr("class", "bar")
-                .attr("x", x(d.gender))
-                .attr("y", y(d.count))
-                .attr("height", height - y(d.count))
-                .attr("width", x.bandwidth())
-                .style("fill", "#eee")
-                .attr("stroke", "black")
-        })
-
+        drawAxisLabels(chart1);
     });
 
     data2 = d3.json('Artists.json').then(data => {
         genderCount = {
-            Male: { gender: "Male", count: 0 },
-            Female: { gender: "Female", count: 0 }
+            Male: { gender: "Male", count: 0, color: "url(#bg-gradient)" },
+            Female: { gender: "Female", count: 0, color: "lightblue" },
         };
+
 
         data.forEach(d => {
             const gender = d.Gender;
 
             if (gender != null)
                 gender == "Male" ? genderCount["Male"].count++ : genderCount["Female"].count++;
+
         });
 
-        console.log("JSON:", genderCount);
-
         genderCount = d3.values(genderCount);
+
         const max = d3.max(genderCount, d => d.count);
 
-        const { x, y } = drawAxes(genderCount, width, height, max, chart2);
-    });
+        draw(genderCount, 0, max, chart2);
 
+        drawAxisLabels(chart2);
+    });
 
 </script>
 

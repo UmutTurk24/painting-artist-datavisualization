@@ -7,11 +7,23 @@ body {
     place-items: center;
 }
 
+div {
+    width: min(90%, 50em);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+p {
+    font-size: 1.25rem;
+    line-height: 1.3;
+}
+
 .bar-chart {
     position: relative;
     border: dashed 2px #333;
     border-radius: 10px;
-    background: #eee;
+    background: white;
 }
 
 .bar {
@@ -19,9 +31,13 @@ body {
 }
 
 .label {
-    font-size: 9pt;
+    font-size: 0.8em;
 }
 
 .category {
     text-anchor: end;
+}
+
+.x-label, .y-label{
+    font-size: 1.25em;
 }
