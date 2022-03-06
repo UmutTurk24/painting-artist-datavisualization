@@ -20,9 +20,9 @@
     <div>
         <h1>Catchy Headline</h1>
         <p>Question!!</p>
-        <svg id="chart-1" width="960" height="540"></svg>
+        <svg id="chart1" width="960" height="540"></svg>
         <p>Question!!</p>
-        <svg id="chart-2" width="960" height="540"></svg>
+        <svg id="chart2" width="960" height="540"></svg>
         <p>Question!!</p>
     </div>
 </body>
@@ -32,21 +32,21 @@
         width = 960 - margin.left - margin.right,
         height = 500 - margin.top - margin.bottom;
 
-    var chart1 = d3.select("#chart-1")
+    var chart1 = d3.select("#chart1")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .attr("class", "bar-chart")
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    var chart2 = d3.select("#chart-2")
+    var chart2 = d3.select("#chart2")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .attr("class", "bar-chart")
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    const drawAxis = (arr, width, height, max, svg) => {
+    const drawAxes = (arr, width, height, max, svg) => {
         const x = d3.scaleBand()
             .rangeRound([0, width])
             .padding(0.1)
@@ -63,7 +63,7 @@
         svg.append("g")
             .call(d3.axisLeft(y));
 
-        return [x,y];
+        return { x, y };
     }
 
     data = d3.csv('Artworks.csv').then(data => {
@@ -94,21 +94,16 @@
 
         const max = d3.max(genderCount, d => d.count);
 
-        console.log(max);
-
-        const axis = drawAxis(genderCount, width, height, max, chart1);
-
-        const x = axis[0]
-        const y = axis[1]
+        const { x, y } = drawAxes(genderCount, width, height, max, chart1);
 
         const entries = chart1.selectAll("g")
             .data(genderCount)
             .enter()
             .append("g");
 
-        entries.each(function (d, i) {
-            console.log(d);
+        entries.each(function (d) {
             const entry = d3.select(this);
+            console.log(entry);
             entry.append("rect")
                 .attr("class", "bar")
                 .attr("x", x(d.gender))
@@ -139,7 +134,7 @@
         genderCount = d3.values(genderCount);
         const max = d3.max(genderCount, d => d.count);
 
-        drawAxis(genderCount, width, height, max, chart2);
+        const { x, y } = drawAxes(genderCount, width, height, max, chart2);
     });
 
 
