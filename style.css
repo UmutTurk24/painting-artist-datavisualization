@@ -23,11 +23,9 @@ p {
 }
 
 .bar-chart {
-    position: relative;
     border: dashed 2px #333;
     border-radius: 10px;
     background: white;
-    width: 100%;
 }
 
 .bar {
@@ -42,16 +40,19 @@ p {
     text-anchor: end;
 }
 
-.x-label, .y-label{
+.x-label, .y-label {
     font-size: 1.25em;
 }
 
-.col2 {
-    display: grid;
-    grid-template-columns: 3fr 2fr;
-    gap: 1em;
+
+.textbox :first-child {
+    margin-top: 0;
 }
 
-.textbox :first-child{
-    margin-top: 0;
+@media (min-width: 850px) {
+    .col2 {
+        display: flex;
+        gap: 1em;
+    }
+
 }
