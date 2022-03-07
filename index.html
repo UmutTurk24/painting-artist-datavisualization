@@ -17,7 +17,7 @@
 <body>
     <script src="https://d3js.org/d3.v5.min.js"></script>
 
-    <div>
+    <div class = "outBox">
         <h1>Female Representation at MoMA</h1>
         <p>Based on this <a
                 href="https://www.tate.org.uk/art/artworks/guerrilla-girls-do-women-have-to-be-naked-to-get-into-the-met-museum-p78793"
@@ -29,10 +29,25 @@
             We initially assumed that there would be disproportionally more male artists exhibited, a ratio confirmed by
             this dataset.
         </p>
-        <svg id="chart1" width="960" height="540"></svg>
-        <p>Question!!</p>
-        <svg id="chart2" width="960" height="540"></svg>
-        <p>Question!!</p>
+        <div class="col2">
+            <svg id="chart1" width="960" height="540"></svg>
+            <div class = "textbox">
+                <p>The first dataset we have is from ... . It contains artists who lived between X and Y and showcased their artwork in MoMA. Looking at <b>Bar-Chart 1</b> shows the number of males and females who showcased their artwork in MoMA. </p>
+                <p>As we can't ignore the striking difference between how much more male artists has been part of this museum compared to female artists, we start to think about what has happened in the past X years and why we lacked female representation.</p>
+            </div>
+        </div>
+        <h3 style=" margin-left: 250px">Bar-Chart 1</h3>
+        
+        <p>In order to make the difference of male and female representation look larger than it already looks like, we have changed the starting point of the y-axis, which allowed females to look like having little to no artworks in the museum compared to men </p>
+        <div class ="col2">
+            <svg id="chart2" width="960" height="540"></svg>
+            <div class="textbox">
+                <p>Moving to the second dataset, which is from ..., we can see another story on the gender distribution of the artists who could showcase their artwork in MoMA.  </p>
+                <p>The <b>Bar-Chart 2</b> on the other hand makes us think if actually the difference was as drastic as we thought. In the past X years, we can still a substantial amoung of female representation in MoMA. </p>
+            </div>
+        </div>
+        <h3 style=" margin-left: 250px">Bar-Chart 2</h3>
+        <p>In contrast to the goal and visualization of <b>Bar-Chart 1</b>, <b>Bar-Chart 2</b> shows a less significant difference between men and female representation. We wanted to emphasise that by adding a gradient color from light-blue to eggwhite for the bar color, which creates the illusion of males not having a very high amount of representation compared to females.  </p>
     </div>
 </body>
 
@@ -123,13 +138,13 @@
             .attr("y", -margin.left * 0.6)
             .text("Number of Artists");
     }
-
+    // Reading the data
     data = d3.csv('Artworks.csv').then(data => {
         genderCount = {
             Male: { gender: "Male", count: 0, color: "lightblue" },
             Female: { gender: "Female", count: 0, color: "lightblue" }
         };
-
+        // Data processing
         data.forEach(d => {
             const gender = d.Gender;
 
@@ -143,7 +158,7 @@
 
             genderCount["Female"].count += femaleCount;
         });
-
+        // initializing the bars
         genderCount = d3.values(genderCount);
 
         const max = d3.max(genderCount, d => d.count);
@@ -152,14 +167,14 @@
 
         drawAxisLabels(chart1);
     });
-
+    // Reading the data
     data2 = d3.json('Artists.json').then(data => {
         genderCount = {
             Male: { gender: "Male", count: 0, color: "url(#bg-gradient)" },
             Female: { gender: "Female", count: 0, color: "lightblue" },
         };
 
-
+        // Data processing
         data.forEach(d => {
             const gender = d.Gender;
 
@@ -167,7 +182,7 @@
                 gender == "Male" ? genderCount["Male"].count++ : genderCount["Female"].count++;
 
         });
-
+        // initializing the bar
         genderCount = d3.values(genderCount);
 
         const max = d3.max(genderCount, d => d.count);

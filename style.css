@@ -7,7 +7,7 @@ body {
     place-items: center;
 }
 
-div {
+.outBox {
     width: min(90%, 50em);
     display: flex;
     flex-direction: column;
@@ -40,4 +40,18 @@ p {
 
 .x-label, .y-label{
     font-size: 1.25em;
+}
+
+.col2 {
+    display:grid;
+    grid-template-columns: 8fr 2fr;
+}
+
+.textbox{
+    margin-left: 20px;
+    margin-top: auto;
+    margin-bottom: auto;
+    text-align: left;
+    height: 540px;
+    width: 250px;
 }
