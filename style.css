@@ -10,16 +10,18 @@ body {
     margin: 1em auto;
 }
 
-.outBox {
+.container {
     width: min(90%, 60em);
     display: flex;
     flex-direction: column;
     justify-content: center;
+    margin: 0.25em 0 1em 0;
 }
 
 p {
     font-size: 1.25rem;
     line-height: 1.5;
+    margin-bottom: auto;
 }
 
 .bar-chart {
@@ -44,14 +46,14 @@ p {
     font-size: 1.25em;
 }
 
-.textbox :first-child {
+.textbox > :first-child {
     margin-top: 0;
 }
 
 @media (min-width: 850px) {
-    .col2 {
-        display: flex;
+    .index-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
         gap: 1em;
     }
-    
 }

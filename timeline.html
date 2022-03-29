@@ -33,37 +33,43 @@
 </style>
 
 <body>
-    <div class="outBox">
-        <div class="container">
-            <h1>Male and Female Artists at MoMA</h1>
-            <p>Continuing our investigation on male and female representation in MoMA, 
-                this time we looked at the number of males and females representations 
-                over the past 250 years. 
-                We wanted to see if there are any trends where female representation decreased
-                while male representations increased or the other way around. 
-            </p>
-            <svg id="chart"></svg>
-            <p> Since we are looking at the past 250 years of MoMA artists, we needed a way to
-                unclutter the data and make it easier to see a trend.
-                In order to do that, first we grouped years 
-                in decades by rounding down to the lower tenth. 
-                Then, for each art piece, we extracted the number of female and male artist 
-                and plotted with a line graph. 
-            </p>
-            <p>
-                We can see from the line-graph that the first female representation was in 
-                1850, and over the upcoming 80 years it continuously increased. From 1940s to 1950s, we see
-                a decline in male representation while the female representation stayed the same,
-                most probably because of the World War 2. For both males and females, there was a substantial increase
-                in representation from 1950s to 1960s. It was unexpected to see a huge decline in male representation
-                from 1970s to 1980s, and an increase in female representation. It might be tied to the 2nd wave feminism of this 
-                era. With the increased number of co-ed schools and women's right to work, there might be a correlation
-                between this movement and why female representation increased in this time. 
-                A possible resource: <a href="http://untitled-magazine.com/the-art-warriors-of-the-second-wave-of-feminism/">NewsArticle</a>
-            </p>
-        </div>
+    <div class="container">
+        <h1>Male and Female Artists at MoMA</h1>
+        <p>Continuing our investigation on male and female representation in MoMA,
+            this time we looked at the number of males and females representation by decade
+            over the past 250 years. We wanted to see the trends of male and female over time.
+        </p>
+        <svg id="chart"></svg>
+        <p> Since we are looking at the past 250 years of artworks exhibited at MoMA, we needed a way to
+            unclutter the data and make it easier to see a trend.
+            In order to do that, first we grouped years
+            in decades by rounding down to the lower tenth.
+            Then, for each art piece, we extracted the number of female and male artist
+            and plotted with a line graph.
+        </p>
+        <p>
+            First, it is important to note that our dataset is not perfect. For once, the formatting of each artists
+            gender, and the year their works were created is inconsistent throughout the document, meaning that many
+            entries of works at the MoMA could not be accuratedly accounted for in this graph. Further, the dataset
+            only accounts for male and female artists. This is inaccurate as it does not include gender non-binary
+            or non-conforming artists.
+        </p>
+        <p>
+            Despite the dataset's limitation, there is still a noticeable gender disparity in the artists exhibited
+            at the Museum of Modern Art. We can see from the line-graph that the first female representation was in
+            1850, and over the upcoming 80 years it continuously increased. From 1940s to 1950s, we seea decline in
+            male representation while the female representation stayed the same, most probably because of the World
+            War 2. For both males and females, there was a substantial increase in representation from 1950s to
+            1960s. It was unexpected to see a huge decline in male representation from 1970s to 1980s accompanied by
+            an increase in female representation. It might be tied to increase in co-ed schools and women's right to
+            work during the Second Wave Feminist movement.
+        </p>
+        <p>
+            Further reading: <a
+                href="http://untitled-magazine.com/the-art-warriors-of-the-second-wave-of-feminism/">The Art
+                Warriors of the Second Wave of Feminism</a>
+        </p>
     </div>
-    
 
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script>
@@ -99,7 +105,7 @@
                 .attr("text-anchor", "middle")
                 .attr("x", width / 2)
                 .attr("y", height + margin.bottom * 0.65)
-                .text("Decades");
+                .text("Artwork's Date of Creation (Decade)");
 
             // Vertical Axis Label
             svg.append("text")
@@ -117,17 +123,16 @@
                 .enter()
                 .append("circle")
                 .attr("cx", 100)
-                .attr("cy", (d, i) => 100 + i * 25) // 100 is where the first dot appears. 25 is the distance between dots
+                .attr("cy", (d, i) => 100 + i * 25)
                 .attr("r", 7)
                 .style("fill", d => z(d.key))
 
-            // Add one dot in the legend for each name.
             svg.selectAll("mylabels")
                 .data(data)
                 .enter()
                 .append("text")
                 .attr("x", 120)
-                .attr("y", (d, i) => 100 + i * 25) // 100 is where the first dot appears. 25 is the distance between dots
+                .attr("y", (d, i) => 100 + i * 25)
                 .style("fill", d => z(d.key))
                 .text(d => d.key)
                 .attr("text-anchor", "left")
@@ -188,7 +193,6 @@
                         }
                         sumData[decade].count++;
                     });
-
                     return d3.values(sumData);
                 })
                 .entries(arr);
@@ -226,9 +230,7 @@
 
             drawLegend(genders);
 
-
         })
-
 
     </script>
 </body>
