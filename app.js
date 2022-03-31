@@ -16,6 +16,7 @@ let result = [];
 // header columns so we store them
 // in headers array
 let headers = array[0].split(",")
+headers[0] = "Title"
 
 // Since headers are separated, we
 // need to traverse remaining n-1 rows.
@@ -47,7 +48,7 @@ for (let i = 1; i < array.length - 1; i++) {
 		}
 		else if (ch === '"' && flag == 1) flag = 0
 		if (ch === ',' && flag === 0) ch = '|'
-		if (ch !== '"') s += ch
+		if (ch !== '"' && ch !== "\n") s += ch
 	}
 
 	// Split the string using pipe delimiter |
@@ -72,6 +73,8 @@ for (let i = 1; i < array.length - 1; i++) {
 	result.push(obj)
 }
 
+newresult = []
+
 result.forEach(d => {
 	genderCount = {
 		Male: 0,
@@ -91,8 +94,6 @@ result.forEach(d => {
 
 	genderCount.Female += femaleCount;
 
-	d.Gender = genderCount
-
 	const year = d.Date;
 	var parsedYear = parseInt(year);
 
@@ -102,12 +103,16 @@ result.forEach(d => {
 		parsedYear = parseInt(number);
 	}
 
-	if (!isNaN(parsedYear)) {
-		d.Date = parsedYear
+	if (gender !== undefined && year !== undefined) {
+		newresult.push({
+			Title: d.Title,
+			Gender: genderCount,
+			Date: parsedYear
+		})
 	}
 });
 
 // Convert the resultant array to json and
 // generate the JSON output file.
-let json = JSON.stringify(result);
+let json = JSON.stringify(newresult);
 fs.writeFileSync('Artworks.json', json);
