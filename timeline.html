@@ -1,189 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LineGraph</title>
 
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <style>
-    * {
-      font-family: sans-serif;
-    }
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LineGraph</title>
 
-    .axis--x path {
-      stroke: black;
-    }
+  <link rel="stylesheet" href="style.css" />
+</head>
+<style>
+  * {
+    font-family: sans-serif;
+  }
 
-    .line {
-      fill: none;
-      stroke: steelblue;
-      stroke-width: 1.5px;
-    }
+  .axis--x path {
+    stroke: black;
+  }
 
-    body {
-      display: flex;
-      justify-content: center;
-      place-items: center;
-    }
-  </style>
+  .line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+  }
 
-  <body>
-    <div class="container">
-      <h1>Male and Female Artists at MoMA</h1>
-      <p>
-        Continuing our investigation on male and female representation in MoMA,
-        this time we looked at the number of males and females representation by
-        decade over the past 250 years. We wanted to see the trends of male and
-        female over time.
-      </p>
-      <svg id="chart"></svg>
-      <p>
-        Since we are looking at the past 250 years of artworks exhibited at
-        MoMA, we needed a way to unclutter the data and make it easier to see a
-        trend. In order to do that, first we grouped years in decades by
-        rounding down to the lower tenth. Then, for each art piece, we extracted
-        the number of female and male artist and plotted with a line graph.
-      </p>
-      <p>
-        First, it is important to note that our dataset is not perfect. For
-        once, the formatting of each artists gender, and the year their works
-        were created is inconsistent throughout the document, meaning that many
-        entries of works at the MoMA could not be accuratedly accounted for in
-        this graph. Further, the dataset only accounts for male and female
-        artists. This is inaccurate as it does not include gender non-binary or
-        non-conforming artists.
-      </p>
-      <p>
-        Despite the dataset's limitation, there is still a noticeable gender
-        disparity in the artists exhibited at the Museum of Modern Art. We can
-        see from the line-graph that the first female representation was in
-        1850, and over the upcoming 80 years it continuously increased. From
-        1940s to 1950s, we seea decline in male representation while the female
-        representation stayed the same, most probably because of the World War
-        2. For both males and females, there was a substantial increase in
-        representation from 1950s to 1960s. It was unexpected to see a huge
-        decline in male representation from 1970s to 1980s accompanied by an
-        increase in female representation. It might be tied to increase in co-ed
-        schools and women's right to work during the Second Wave Feminist
-        movement.
-      </p>
-      <p>
-        Further reading:
-        <a
-          href="http://untitled-magazine.com/the-art-warriors-of-the-second-wave-of-feminism/"
-          >The Art Warriors of the Second Wave of Feminism</a
-        >
-      </p>
-    </div>
+  body {
+    display: flex;
+    justify-content: center;
+    place-items: center;
+  }
+</style>
 
-    <script src="https://d3js.org/d3.v5.min.js"></script>
-    <script>
+<body>
+  <div class="container">
+    <h1>Male and Female Artists at MoMA</h1>
+    <p>
+      Continuing our investigation on male and female representation in MoMA,
+      this time we looked at the number of males and females representation by
+      decade over the past 250 years. We wanted to see the trends of male and
+      female over time.
+    </p>
+    <svg id="chart"></svg>
+    <p>
+      Since we are looking at the past 250 years of artworks exhibited at
+      MoMA, we needed a way to unclutter the data and make it easier to see a
+      trend. In order to do that, first we grouped years in decades by
+      rounding down to the lower tenth. Then, for each art piece, we extracted
+      the number of female and male artist and plotted with a line graph.
+    </p>
+    <p>
+      First, it is important to note that our dataset is not perfect. For
+      once, the formatting of each artists gender, and the year their works
+      were created is inconsistent throughout the document, meaning that many
+      entries of works at the MoMA could not be accuratedly accounted for in
+      this graph. Further, the dataset only accounts for male and female
+      artists. This is inaccurate as it does not include gender non-binary or
+      non-conforming artists.
+    </p>
+    <p>
+      Despite the dataset's limitation, there is still a noticeable gender
+      disparity in the artists exhibited at the Museum of Modern Art. We can
+      see from the line-graph that the first female representation was in
+      1850, and over the upcoming 80 years it continuously increased. From
+      1940s to 1950s, we seea decline in male representation while the female
+      representation stayed the same, most probably because of the World War
+      2. For both males and females, there was a substantial increase in
+      representation from 1950s to 1960s. It was unexpected to see a huge
+      decline in male representation from 1970s to 1980s accompanied by an
+      increase in female representation. It might be tied to increase in co-ed
+      schools and women's right to work during the Second Wave Feminist
+      movement.
+    </p>
+    <p>
+      Further reading:
+      <a href="http://untitled-magazine.com/the-art-warriors-of-the-second-wave-of-feminism/">The Art Warriors of the
+        Second Wave of Feminism</a>
+    </p>
+  </div>
 
-      // Constants
-      var margin = { top: 20, right: 20, bottom: 70, left: 80 },
-        width = 950 - margin.left - margin.right,
-        height = 560 - margin.top - margin.bottom;
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script>
 
-      // Chart SVGs
-      var svg = d3
-        .select("#chart")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .attr("class", "bar-chart")
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    // Constants
+    var margin = { top: 20, right: 20, bottom: 70, left: 80 },
+      width = 950 - margin.left - margin.right,
+      height = 560 - margin.top - margin.bottom;
 
-      var parseTime = d3.timeParse("%Y");
+    // Chart SVGs
+    var svg = d3
+      .select("#chart")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .attr("class", "bar-chart")
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-      var x = d3.scaleTime().range([0, width]),
-        y = d3.scaleLinear().range([height, 0]),
-        z = d3.scaleOrdinal(d3.schemeSet1);
+    var parseTime = d3.timeParse("%Y");
 
-      var line = d3
-        .line()
-        .curve(d3.curveLinear)
-        .x((d) => {
-          return x(d.decade);
-        })
-        .y((d) => {
-          return y(d.count);
-        });
+    var x = d3.scaleTime().range([0, width]),
+      y = d3.scaleLinear().range([height, 0]),
+      z = d3.scaleOrdinal(d3.schemeSet2);
 
-      const drawAxisLabels = (svg) => {
-        // Horizontal Axis Label
-        svg
-          .append("text")
-          .attr("class", "x-label")
-          .attr("text-anchor", "middle")
-          .attr("x", width / 2)
-          .attr("y", height + margin.bottom * 0.65)
-          .text("Artwork's Date of Creation (Decade)");
+    var line = d3
+      .line()
+      .curve(d3.curveLinear)
+      .x((d) => {
+        return x(d.decade);
+      })
+      .y((d) => {
+        return y(d.count);
+      });
 
-        // Vertical Axis Label
-        svg
-          .append("text")
-          .attr("class", "y-label")
-          .attr("text-anchor", "middle")
-          .attr("transform", "rotate(-90)")
-          .attr("x", -height / 2)
-          .attr("y", -margin.left * 0.65)
-          .text("Number of Artists");
-      };
+    const drawAxisLabels = (svg) => {
+      // Horizontal Axis Label
+      svg
+        .append("text")
+        .attr("class", "x-label")
+        .attr("text-anchor", "middle")
+        .attr("x", width / 2)
+        .attr("y", height + margin.bottom * 0.65)
+        .text("Artwork's Date of Creation (Decade)");
 
-      const drawLegend = (data) => {
-        svg
-          .selectAll("mydots")
-          .data(data)
-          .enter()
-          .append("circle")
-          .attr("cx", 100)
-          .attr("cy", (d, i) => 100 + i * 25)
-          .attr("r", 7)
-          .style("fill", (d) => z(d.key));
+      // Vertical Axis Label
+      svg
+        .append("text")
+        .attr("class", "y-label")
+        .attr("text-anchor", "middle")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -height / 2)
+        .attr("y", -margin.left * 0.65)
+        .text("Number of Artists");
+    };
 
-        svg
-          .selectAll("mylabels")
-          .data(data)
-          .enter()
-          .append("text")
-          .attr("x", 120)
-          .attr("y", (d, i) => 100 + i * 25)
-          .style("fill", (d) => z(d.key))
-          .text((d) => d.key)
-          .attr("text-anchor", "left")
-          .style("alignment-baseline", "middle");
-      };
+    const drawLegend = (data) => {
+      svg
+        .selectAll("mydots")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("cx", 100)
+        .attr("cy", (d, i) => 100 + i * 25)
+        .attr("r", 7)
+        .style("fill", (d) => z(d.key));
 
-      data = d3.json("Artworks.json").then((data) => {
-        // make array w processed year as int all artworks
-        // collect array into decades object
-        // plot using decades on x-axis and decades.length on y axis
-        arr = [];
+      svg
+        .selectAll("mylabels")
+        .data(data)
+        .enter()
+        .append("text")
+        .attr("x", 120)
+        .attr("y", (d, i) => 100 + i * 25)
+        .style("fill", (d) => z(d.key))
+        .text((d) => d.key)
+        .attr("text-anchor", "left")
+        .style("alignment-baseline", "middle");
+    };
 
-        data.forEach((d) => {
-          const gender = d.Gender;
-          const year = d.Date;
+    data = d3.json("Artworks.json").then((data) => {
+      // make array w processed year as int all artworks
+      // collect array into decades object
+      // plot using decades on x-axis and decades.length on y axis
+      arr = [];
 
-          if (gender !== undefined && year !== undefined) {
-            // Count entries with gender of (Male), (male). Account for group artworks
-            const maleCount =
-              (gender.match(/(Male)/g) || []).length +
-              (gender.match(/(male)/g) || []).length;
+      data.forEach((d) => {
+        const gender = d.Gender;
+        const year = d.Date;
 
-            // Count entries with gender of (Female), (female). Account for group artworks
-            const femaleCount =
-              (gender.match(/(Female)/g) || []).length +
-              (gender.match(/(female)/g) || []).length;
+        if (gender !== undefined && year !== undefined) {
+          // Count entries with gender of (Male), (male). Account for group artworks
+          const maleCount = gender.Male
 
-            var parsedYear = parseInt(year);
-            if (isNaN(parsedYear)) {
-              year.replace("c.", "");
-              var number = year.substring(0, 4);
-              parsedYear = parseInt(number);
-            }
+          // Count entries with gender of (Female), (female). Account for group artworks
+          const femaleCount = gender.Female
+
+          var parsedYear = parseInt(year);
+          if (!isNaN(parsedYear)) {
             var decade = Math.abs(parsedYear - (parsedYear % 10));
 
             if (decade >= 1000) {
@@ -198,64 +189,66 @@
               }
             }
           }
-        });
-
-        // Nest data using gender as key, and an array of how many
-        // artists were counted in each decade
-        var genders = d3
-          .nest()
-          .key(function (d) {
-            return d.gender;
-          })
-          .rollup(function (v) {
-            sumData = {};
-            v.forEach((e) => {
-              const decade = e.decade;
-              if (!sumData.hasOwnProperty(decade)) {
-                sumData[decade] = { decade: decade, count: 0 };
-              }
-              sumData[decade].count++;
-            });
-            return d3.values(sumData);
-          })
-          .entries(arr);
-
-        genders.forEach((d) => {
-          d.value.sort((a, b) => d3.ascending(a.decade, b.decade));
-        });
-
-        x.domain(d3.extent(arr, (d) => d.decade));
-        y.domain([0, d3.max(genders, (g) => d3.max(g.value, (d) => d.count))]);
-        z.domain(genders.map((c) => c.key));
-
-        svg
-          .append("g")
-          .attr("class", "axis axis--x")
-          .attr("transform", "translate(0," + height + ")")
-          .call(d3.axisBottom(x));
-
-        svg.append("g").attr("class", "axis axis--y").call(d3.axisLeft(y));
-
-        var gender = svg
-          .selectAll(".gender")
-          .data(genders)
-          .enter()
-          .append("g")
-          .attr("class", "gender");
-
-        gender
-          .append("path")
-          .attr("class", "line")
-          .attr("d", (d) => line(d.value))
-          .style("stroke", (d) => z(d.key))
-          .style("stroke-width", "3px")
-          .style("stroke-linecap", "round");
-
-        drawAxisLabels(svg);
-
-        drawLegend(genders);
-        
+        }
       });
-    </script>
-  </body>
+
+      // Nest data using gender as key, and an array of how many
+      // artists were counted in each decade
+      var genders = d3
+        .nest()
+        .key(function (d) {
+          return d.gender;
+        })
+        .rollup(function (v) {
+          sumData = {};
+          v.forEach((e) => {
+            const decade = e.decade;
+            if (!sumData.hasOwnProperty(decade)) {
+              sumData[decade] = { decade: decade, count: 0 };
+            }
+            sumData[decade].count++;
+          });
+          return d3.values(sumData);
+        })
+        .entries(arr);
+
+      genders.forEach((d) => {
+        d.value.sort((a, b) => d3.ascending(a.decade, b.decade));
+      });
+
+      x.domain(d3.extent(arr, (d) => d.decade));
+      y.domain([0, d3.max(genders, (g) => d3.max(g.value, (d) => d.count))]);
+      z.domain(genders.map((c) => c.key));
+
+      svg
+        .append("g")
+        .attr("class", "axis axis--x")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
+
+      svg.append("g").attr("class", "axis axis--y").call(d3.axisLeft(y));
+
+      var gender = svg
+        .selectAll(".gender")
+        .data(genders)
+        .enter()
+        .append("g")
+        .attr("class", "gender");
+
+      gender
+        .append("path")
+        .attr("class", "line")
+        .attr("d", (d) => line(d.value))
+        .style("stroke", (d) => z(d.key))
+        .style("stroke-width", "3px")
+        .style("stroke-linecap", "round");
+
+      drawAxisLabels(svg);
+
+      drawLegend(genders);
+
+    });
+  </script>
+</body>
+
 </html>

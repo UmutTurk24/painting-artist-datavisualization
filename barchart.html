@@ -176,7 +176,7 @@
     }
 
     // Reading the data
-    data = d3.csv('Artworks.csv').then(data => {
+    data = d3.json('Artworks.json').then(data => {
         genderCount = {
             Male: { gender: "Male", count: 0, color: "lightblue" },
             Female: { gender: "Female", count: 0, color: "lightblue" }
@@ -186,14 +186,11 @@
             const gender = d.Gender;
 
             // Count entries with gender of (Male), (male). Account for group artworks
-            const maleCount = (gender.match(/(Male)/g) || []).length
-                + (gender.match(/(male)/g) || []).length
-
+            const maleCount = gender.Male
             genderCount["Male"].count += maleCount;
 
-            const femaleCount = (gender.match(/(Female)/g) || []).length
-                + (gender.match(/(female)/g) || []).length
-
+            // Count entries with gender of (Female), (female). Account for group artworks
+            const femaleCount = gender.Female
             genderCount["Female"].count += femaleCount;
         });
         // initializing the bars
