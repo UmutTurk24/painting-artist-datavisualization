@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LineGraph</title>
+  <title>Time Series</title>
 
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -33,7 +33,7 @@
 
 <body>
   <div class="container">
-    <h1>Male and Female Artists at MoMA</h1>
+    <h1>MoMA Artists over Time</h1>
     <p>
       Continuing our investigation on male and female representation in MoMA,
       this time we looked at the number of males and females representation by
@@ -166,29 +166,26 @@
         const gender = d.Gender;
         const year = d.Date;
 
-        if (gender !== undefined && year !== undefined) {
-          // Count entries with gender of (Male), (male). Account for group artworks
-          const maleCount = gender.Male
+        // Count entries with gender of (Male), (male). Account for group artworks
+        const maleCount = gender.Male
 
-          // Count entries with gender of (Female), (female). Account for group artworks
-          const femaleCount = gender.Female
+        // Count entries with gender of (Female), (female). Account for group artworks
+        const femaleCount = gender.Female
 
-          var parsedYear = parseInt(year);
-          if (!isNaN(parsedYear)) {
-            var decade = Math.abs(parsedYear - (parsedYear % 10));
+        var parsedYear = parseInt(year);
+        var decade = Math.abs(parsedYear - (parsedYear % 10));
+
+        if (decade >= 1000) {
+          decade = parseTime(decade);
+
+          // Create unique entries for every instance of male artists in each decade
+          for (let i = 0; i < maleCount; i++) {
+            arr.push({ gender: "Male", decade: decade });
+          }
+          for (let i = 0; i < femaleCount; i++) {
+            arr.push({ gender: "Female", decade: decade });
           }
 
-          if (decade >= 1000) {
-            decade = parseTime(decade);
-
-            // Create unique entries for every instance of male artists in each decade
-            for (let i = 0; i < maleCount; i++) {
-              arr.push({ gender: "Male", decade: decade });
-            }
-            for (let i = 0; i < femaleCount; i++) {
-              arr.push({ gender: "Female", decade: decade });
-            }
-          }
         }
       });
 
