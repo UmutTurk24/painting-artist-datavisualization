@@ -69,7 +69,7 @@
       museum to rebuild its collection and the <a
         href="https://www.artspace.com/magazine/art_101/lists/moma-archives-1960s-54286"
         target="_blank" rel="noopener noreferrer">historic exhibitions</a>
-      presented by the MoMA in this year.
+      presented by the MoMA in this decade.
     </p>
     <svg id="chartCumulative"></svg>
     <p>
@@ -168,7 +168,7 @@
     };
 
     data = d3.json("Artworks-time.json").then((data) => {
-      arr = [];
+      var genders = { Male: { key: "Male", value: {} }, Female: { key: "Female", value: {} } };
 
       data.forEach((d) => {
         const gender = d.Gender;
@@ -180,48 +180,36 @@
         // Count entries with gender of (Female), (female). Account for group artworks
         const femaleCount = gender.Female
 
-        // var year = Math.abs(year - (year % 10));
+        // var decade = Math.abs(year - (year % 10));
 
-        if (year >= 1000) {
+        if (year >= 1000 && (maleCount || femaleCount)) {
           const parsedYear = parseTime(year);
 
-          // Create unique entries for every instance of male artists in each year
-          for (let i = 0; i < maleCount; i++) {
-            arr.push({ gender: "Male", year: parsedYear });
+          if (!genders["Male"].value.hasOwnProperty(year)) {
+            genders["Male"].value[year] = { year: parsedYear, count: 0 };
           }
-          for (let i = 0; i < femaleCount; i++) {
-            arr.push({ gender: "Female", year: parsedYear });
-          }
+          genders["Male"].value[year].count += maleCount;
 
+
+          if (!genders["Female"].value.hasOwnProperty(year)) {
+            genders["Female"].value[year] = { year: parsedYear, count: 0 };
+          }
+          genders["Female"].value[year].count += femaleCount;
         }
       });
 
-      // Nest data using gender as key, and an array of how many
-      // artists were counted in each year
-      var genders = d3
-        .nest()
-        .key(function (d) {
-          return d.gender;
-        })
-        .rollup(function (v) {
-          sumData = {};
-          v.forEach((e) => {
-            const year = e.year;
-            if (!sumData.hasOwnProperty(year)) {
-              sumData[year] = { year: year, count: 0 };
-            }
-            sumData[year].count++;
-          });
+      genders = d3.values(genders);
 
-          return d3.values(sumData)
-            .sort((a, b) => d3.ascending(a.year, b.year));
-        })
-        .entries(arr);
+      genders.forEach(d => {
+        d.value = d3.values(d.value).sort((a, b) => d3.ascending(a.year, b.year))
+      });
 
+      const minYear = d3.min(genders, g => d3.min(g.value, (d) => d.year))
+      const maxYear = d3.max(genders, g => d3.max(g.value, (d) => d.year))
 
-      x.domain(d3.extent(arr, (d) => d.year));
+      x.domain([minYear, maxYear]);
       y.domain([0, d3.max(genders, (g) => d3.max(g.value, (d) => d.count))]);
-      color.domain(genders.map((c) => c.key));
+      color.domain(genders.map(c => c.key));
 
       svg
         .append("g")
@@ -250,38 +238,20 @@
       drawAxisLabels(svg, "Date of Artwork Acquisition", "Number of Artworks");
       drawLegend(svg, genders);
 
-      var gendersCumulative = d3
-        .nest()
-        .key(function (d) {
-          return d.gender;
-        })
-        .rollup(function (v) {
-          sumData = {};
-
-          v.forEach((e) => {
-            const year = e.year;
-            if (!sumData.hasOwnProperty(year)) {
-              sumData[year] = { year: year, count: 0 };
-            }
-            sumData[year].count++;
-          });
-
-          const vals = d3.values(sumData);
-          vals.sort((a, b) => d3.ascending(a.year, b.year));
-          for (var i = 1; i < vals.length; i++) {
-            vals[i].count += vals[i - 1].count;
-          }
-          return vals
-        })
-        .entries(arr);
-        
-      y.domain([0, d3.max(gendersCumulative, g => d3.max(g.value, d => d.count))]);
+      var gendersCumulative = [...genders];
       
+      gendersCumulative.forEach(d => {
+        for (let i = 1; i < d.value.length; i++) {
+          d.value[i].count += d.value[i - 1].count
+        }
+      });
+
+      y.domain([0, d3.max(gendersCumulative, g => d3.max(g.value, d => d.count))]);
+
       svgCumulative
         .append("g")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x));
-
 
       svgCumulative
         .append("g")
@@ -292,15 +262,15 @@
         .data(gendersCumulative)
         .enter()
         .append("g")
-          .attr("class", "gender");
+        .attr("class", "gender");
 
       genderCumulative
         .append("path")
-          .attr("class", "line")
-          .attr("d", (d) => line(d.value))
-          .style("stroke", (d) => color(d.key))
-          .style("stroke-width", "1.5px")
-          .style("stroke-linecap", "round");
+        .attr("class", "line")
+        .attr("d", (d) => line(d.value))
+        .style("stroke", (d) => color(d.key))
+        .style("stroke-width", "1.5px")
+        .style("stroke-linecap", "round");
 
       drawAxisLabels(svgCumulative, "Date of Artwork Acquisition", "Cumulative Artworks");
       drawLegend(svgCumulative, gendersCumulative);

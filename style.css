@@ -28,6 +28,7 @@ p {
     border: dashed 2px #333;
     border-radius: 10px;
     background: white;
+    margin-top: 1em;
 }
 
 .bar {

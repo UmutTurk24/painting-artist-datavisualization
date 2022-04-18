@@ -74,6 +74,7 @@ for (let i = 1; i < array.length - 1; i++) {
 }
 
 newresult = []
+var counter = 0;
 
 result.forEach(d => {
 	genderCount = {
@@ -95,19 +96,14 @@ result.forEach(d => {
 	genderCount.Female += femaleCount;
 
 	const year = d.Date;
-	var parsedYear = parseInt(year);
+	var parsedYear = undefined;
 
-	if (isNaN(parsedYear) && year !== undefined) {
-		year.replace("c.", "");
-		var number = year.substring(0, 4);
-		parsedYear = parseInt(number);
-	}
-
-	if (gender !== undefined && year !== undefined) {
+	
+	if (gender !== undefined) {
 		newresult.push({
-			Title: d.Title,
 			Gender: genderCount,
-			Date: parsedYear
+			Date: parsedYear,
+			Nationality: d.Nationality
 		})
 	}
 });
@@ -115,4 +111,4 @@ result.forEach(d => {
 // Convert the resultant array to json and
 // generate the JSON output file.
 let json = JSON.stringify(newresult);
-fs.writeFileSync('Artworks.json', json);
+fs.writeFileSync('Artworks-test.json', json);
