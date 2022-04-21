@@ -97,9 +97,9 @@ for (let i = 1; i < array.length - 1; i++) {
 newresult = []
 
 result.forEach(d => {
-
 	const countryMap = { "Austrian": "Austria", "French": "France", "American": "United States", "German": "Germany", "Dutch": "Netherlands", "Italian": "Italy", "Swedish": "Sweden", "British": "England", "Japanese": "Japan", "Argentine": "Argentina", "Brazilian": "Brazil", "Swiss": "Switzerland", "Luxembourgish": "Luxembourg", "Spanish": "Spain", "Polish": "Poland", "Russian": "Russia", "Iranian": "Iran", "Canadian": "Canada", "Belgian": "Belgium", "Norwegian": "Norway", "Finnish": "Finland", "Danish": "Denmark", "Czech": "Czech Rep.", "Moroccan": "Morocco", "Colombian": "Colombia", "Australian": "Australia", "Chinese": "China", "Mexican": "Mexico", "Yugoslav": whatYugov(d.Artist), "Scottish": "Scotland", "Hungarian": "Hungary", "Slovenian": "Slovenia", "Chilean": "Chile", "Latvian": "Latvia", "Greek": "Greece", "Israeli": "Israel", "Czechoslovakian": "Czech Rep.", "Icelandic": "Iceland", "Croatian": "Croatia", "Ukrainian": "Ukraine", "Cuban": "Cuba", "Romanian": "Romania", "Venezuelan": "Venezuela", "Uruguayan": "Uruguay", "Irish": "Ireland", "Georgian": "Georgian", "Thai": "Thailand", "Algerian": "Algeria", "Guatemalan": "Guatemala", "Indian": "India", "Costa Rican": "Costa Rica", "Korean": "Korea", "Ethiopian": "Ethiopia", "Kuwaiti": "Kuwait", "Haitian": "Haiti", "South African": "South Africa", "Zimbabwean": "Zimbabwe", "Portuguese": "Portugal", "Panamanian": "Panama", "Ecuadorian": "Ecuador", "Peruvian": "Peru", "Congolese": "Dem. Rep. Congo", "Malian": "Mali", "Turkish": "Turkey", "Cambodian": "Cambodia", "Bosnian": "Bosnia", "Canadian Inuit": "Canada", "Slovak": "Slovakia", "Estonian": "Estonia", "Pakistani": "Pakistan", "Bulgarian": "Bulgaria", "Bolivian": "Bolivia", "Palestinian": "Palestine", "Taiwanese": "Taiwan", "Paraguayan": "Paraguay", "Nicaraguan": "Nicaragua", "Tunisian": "Tunisia", "Sudanese": "Sudan", "Tanzanian": "Tanzania", "Guyanese": "Guyana", "Senegalese": "Senegal", "Bahamian": "Bahamas", "New Zealander": "New Zealand", "Lebanese": "Lebanon", "Cypriot": "Cyprus", "Kenyan": "Kenya", "Nigerian": "Nigeria", "Egyptian": "Egypt", "Albanian": "Albania", "Azerbaijani": "Azerbaijan", "Ivorian": "Cóte d'Ivoire", "Malaysian": "Malaysia", "Serbian": "Serbia", "Singaporean": "Singapore", "Lithuanian": "Lithuania", "Tajik": "Tajikistan", "Namibian": "Namibia", "Native American": "United States", "Ghanaian": "Ghana", "Afghan": "Afghanistan", "Kyrgyzstani": "Kyrgyzstan", "Welsh": "Wales", "Vietnamese": "Vietnam", "Ugandan": "Uganda", "English": "England", "Cameroonian": "Cameroon", "Mauritanian": "Mauritania", "Syrian": "Syria", "Iraqi": "Iraq", "Saudi Arabian": "Saudi Arabia", "Kazakhstani": "Kazakhstan", "Rwandan": "Rwanda", "Indonesian": "Indonesia", "Burkinabe": "Burkina Faso", "Macedonian": "Macedonia", "Filipino": "Philippines", "Mozambican": "Mozambique", "Angolan": "Angola", "Puerto Rican": "Puerto Rico", "Catalan": "Spain" }
-	genderCount = {
+
+	/*	genderCount = {
 		Male: 0,
 		Female: 0
 	};
@@ -115,9 +115,9 @@ result.forEach(d => {
 	const femaleCount = (gender.match(/(Female)/g) || []).length
 		+ (gender.match(/(female)/g) || []).length
 
-	genderCount.Female += femaleCount;
+	genderCount.Female += femaleCount; */
 
-	const year = d.DateAcquired;
+	/* const year = d.DateAcquired;
 	var parsedYear = 0;
 
 	if (year && year !== undefined) {
@@ -130,7 +130,7 @@ result.forEach(d => {
 			year.replace("-", "")
 			parsedYear = parseInt(year.substring(4))
 		}
-	}
+	} */
 
 	const nations = d.Nationality !== undefined ? d.Nationality : "";
 	var countries = []
@@ -149,16 +149,30 @@ result.forEach(d => {
 		if (ch === "(") start = true;
 	}
 
-	if (gender !== undefined && parsedYear > 1000 && countries.length) {
+	if (/*gender !== undefined && parsedYear > 1000 && */countries.length) {
 		newresult.push({
 			// Gender: genderCount,
-			Date: parsedYear,
+			// Date: parsedYear,
 			Nationality: countries
 		})
 	}
 });
 
+var countryC = {}
+
+newresult.forEach(d => {
+	d.Nationality.forEach(e => {
+		if (!countryC[e]) {
+			countryC[e] = {
+				country: e,
+				count: 0
+			}
+		}
+		countryC[e].count++;
+	});
+});
+
 // Convert the resultant array to json and
 // generate the JSON output file.
-let json = JSON.stringify(newresult);
-fs.writeFileSync('Artworks-test.json', json);
+let json = JSON.stringify(countryC);
+fs.writeFileSync('Country-count.json', json);
