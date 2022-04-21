@@ -1,7 +1,29 @@
 // Reading the file using default
 // fs npm package
+const { count } = require("console");
 const fs = require("fs");
 csv = fs.readFileSync("Artworks.csv")
+
+const whatYugov = (artist) => {
+	let nationality
+	if (artist === "Oskar Kogoj" || artist === "Saša Janez Mächtig"
+		|| artist === "Majda Dobravec-Lajovic" || artist === "Janez Bernik"
+		|| artist === "Riko Debenjak" || artist === "Bogdan-Kiar Mesko")
+		nationality = "Slovenia";
+	if (artist === "Stipe Brcic" || artist === "Edo Murtic" ||
+		artist === "Adriana Maraz-Bernik" || artist === "Julije Knifer" ||
+		artist === "Miroslav Sutej" || artist === "Zdravko Tisljar")
+		nationality = "Croatia";
+	if (artist === "Vladimir Velickovic" || artist === "Dušan Džamonja"
+		|| artist === "Ivan Tabakovic" || artist === "Olja Ivanjicki"
+		|| artist === "Dimitrije Martinovic" || artist === "Marina Abramović"
+		|| artist === "Jovan Kratohvil" || artist === "Lazar Vujaklija")
+		nationality = "Serbia";
+	if (artist === "Vlatko Gilic")
+		nationality = "Montenegro"
+	return nationality
+}
+
 
 // Convert the data to String and
 // split it in an array
@@ -41,13 +63,12 @@ for (let i = 1; i < array.length - 1; i++) {
 	// we replace them with pipe |
 	// We keep adding the characters we
 	// traverse to a String s
-	let flag = 0
+	let flag = false
 	for (let ch of str) {
-		if (ch === '"' && flag === 0) {
-			flag = 1
+		if (ch === '"') {
+			flag = !flag
 		}
-		else if (ch === '"' && flag == 1) flag = 0
-		if (ch === ',' && flag === 0) ch = '|'
+		if (ch === ',' && !flag) ch = '|'
 		if (ch !== '"' && ch !== "\n") s += ch
 	}
 
@@ -74,9 +95,10 @@ for (let i = 1; i < array.length - 1; i++) {
 }
 
 newresult = []
-var counter = 0;
 
 result.forEach(d => {
+
+	const countryMap = { "Austrian": "Austria", "French": "France", "American": "United States", "German": "Germany", "Dutch": "Netherlands", "Italian": "Italy", "Swedish": "Sweden", "British": "England", "Japanese": "Japan", "Argentine": "Argentina", "Brazilian": "Brazil", "Swiss": "Switzerland", "Luxembourgish": "Luxembourg", "Spanish": "Spain", "Polish": "Poland", "Russian": "Russia", "Iranian": "Iran", "Canadian": "Canada", "Belgian": "Belgium", "Norwegian": "Norway", "Finnish": "Finland", "Danish": "Denmark", "Czech": "Czech Rep.", "Moroccan": "Morocco", "Colombian": "Colombia", "Australian": "Australia", "Chinese": "China", "Mexican": "Mexico", "Yugoslav": whatYugov(d.Artist), "Scottish": "Scotland", "Hungarian": "Hungary", "Slovenian": "Slovenia", "Chilean": "Chile", "Latvian": "Latvia", "Greek": "Greece", "Israeli": "Israel", "Czechoslovakian": "Czech Rep.", "Icelandic": "Iceland", "Croatian": "Croatia", "Ukrainian": "Ukraine", "Cuban": "Cuba", "Romanian": "Romania", "Venezuelan": "Venezuela", "Uruguayan": "Uruguay", "Irish": "Ireland", "Georgian": "Georgian", "Thai": "Thailand", "Algerian": "Algeria", "Guatemalan": "Guatemala", "Indian": "India", "Costa Rican": "Costa Rica", "Korean": "Korea", "Ethiopian": "Ethiopia", "Kuwaiti": "Kuwait", "Haitian": "Haiti", "South African": "South Africa", "Zimbabwean": "Zimbabwe", "Portuguese": "Portugal", "Panamanian": "Panama", "Ecuadorian": "Ecuador", "Peruvian": "Peru", "Congolese": "Dem. Rep. Congo", "Malian": "Mali", "Turkish": "Turkey", "Cambodian": "Cambodia", "Bosnian": "Bosnia", "Canadian Inuit": "Canada", "Slovak": "Slovakia", "Estonian": "Estonia", "Pakistani": "Pakistan", "Bulgarian": "Bulgaria", "Bolivian": "Bolivia", "Palestinian": "Palestine", "Taiwanese": "Taiwan", "Paraguayan": "Paraguay", "Nicaraguan": "Nicaragua", "Tunisian": "Tunisia", "Sudanese": "Sudan", "Tanzanian": "Tanzania", "Guyanese": "Guyana", "Senegalese": "Senegal", "Bahamian": "Bahamas", "New Zealander": "New Zealand", "Lebanese": "Lebanon", "Cypriot": "Cyprus", "Kenyan": "Kenya", "Nigerian": "Nigeria", "Egyptian": "Egypt", "Albanian": "Albania", "Azerbaijani": "Azerbaijan", "Ivorian": "Cóte d'Ivoire", "Malaysian": "Malaysia", "Serbian": "Serbia", "Singaporean": "Singapore", "Lithuanian": "Lithuania", "Tajik": "Tajikistan", "Namibian": "Namibia", "Native American": "United States", "Ghanaian": "Ghana", "Afghan": "Afghanistan", "Kyrgyzstani": "Kyrgyzstan", "Welsh": "Wales", "Vietnamese": "Vietnam", "Ugandan": "Uganda", "English": "England", "Cameroonian": "Cameroon", "Mauritanian": "Mauritania", "Syrian": "Syria", "Iraqi": "Iraq", "Saudi Arabian": "Saudi Arabia", "Kazakhstani": "Kazakhstan", "Rwandan": "Rwanda", "Indonesian": "Indonesia", "Burkinabe": "Burkina Faso", "Macedonian": "Macedonia", "Filipino": "Philippines", "Mozambican": "Mozambique", "Angolan": "Angola", "Puerto Rican": "Puerto Rico", "Catalan": "Spain" }
 	genderCount = {
 		Male: 0,
 		Female: 0
@@ -95,15 +117,43 @@ result.forEach(d => {
 
 	genderCount.Female += femaleCount;
 
-	const year = d.Date;
-	var parsedYear = undefined;
+	const year = d.DateAcquired;
+	var parsedYear = 0;
 
-	
-	if (gender !== undefined) {
+	if (year && year !== undefined) {
+		if (year.includes("/")) {
+			var yearEnd = year.substring(year.length - 2, year.length)
+			var start = yearEnd >= 20 ? "19" : "20"
+			var yearStr = start + yearEnd;
+			parsedYear = parseInt(yearStr)
+		} else {
+			year.replace("-", "")
+			parsedYear = parseInt(year.substring(4))
+		}
+	}
+
+	const nations = d.Nationality !== undefined ? d.Nationality : "";
+	var countries = []
+	var nation = "";
+	var start = false;
+	for (ch of nations) {
+		if (start && ch === ")") {
+			if (countryMap[nation])
+				countries.push(countryMap[nation]);
+			nation = "";
+			start = false;
+		}
+		if (start) {
+			nation += ch;
+		}
+		if (ch === "(") start = true;
+	}
+
+	if (gender !== undefined && parsedYear > 1000 && countries.length) {
 		newresult.push({
-			Gender: genderCount,
+			// Gender: genderCount,
 			Date: parsedYear,
-			Nationality: d.Nationality
+			Nationality: countries
 		})
 	}
 });

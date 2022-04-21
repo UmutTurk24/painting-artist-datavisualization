@@ -62,14 +62,13 @@
       works created by female artists in the early 30s, roughly 5 years
       after its creation. From here, it has consistently acquired more art
       from male artists. There is a spike in art acquisition in the early
-      1960s,
-      likely due to the <a
+      1960s, likely due to a <a
         href="https://www.moma.org/interactives/moma_through_time/1950/moma-on-fire/"
-        target="_blank" rel="noopener noreferrer">1958 fire</a> forcing the
-      museum to rebuild its collection and the <a
+        target="_blank" rel="noopener noreferrer">fire in 1958</a>, which
+      forced the museum to rebuild part of its collection and the <a
         href="https://www.artspace.com/magazine/art_101/lists/moma-archives-1960s-54286"
-        target="_blank" rel="noopener noreferrer">historic exhibitions</a>
-      presented by the MoMA in this decade.
+        target="_blank" rel="noopener noreferrer">
+        historic exhibitions</a> presented by the MoMA in this decade.
     </p>
     <svg id="chartCumulative"></svg>
     <p>
@@ -239,7 +238,7 @@
       drawLegend(svg, genders);
 
       var gendersCumulative = [...genders];
-      
+
       gendersCumulative.forEach(d => {
         for (let i = 1; i < d.value.length; i++) {
           d.value[i].count += d.value[i - 1].count

@@ -21,7 +21,6 @@ body {
 p {
     font-size: 1.25rem;
     line-height: 1.5;
-    margin-bottom: auto;
 }
 
 .bar-chart {
@@ -47,7 +46,7 @@ p {
     font-size: 1.25em;
 }
 
-.textbox > :first-child {
+.textbox> :first-child {
     margin-top: 0;
 }
 
@@ -59,7 +58,72 @@ p {
     }
 }
 
-.ugly-button{
+.moma-grid {
+    height: 30rem;
+    display: grid;
+    overflow: hidden;
+}
+
+.grid-left {
+    grid-template-columns: 1fr 2fr;
+}
+
+.grid-right {
+    grid-template-columns: 2fr 1fr;
+}
+
+.text-container {
+    display: flex;
+    flex-direction: column;
+    padding: 5em 3em;
+    height: inherit;
+    color: black;
+    text-decoration: none;
+}
+
+.block-link {
+    text-decoration: none;
+    height: inherit;
+}
+
+.yellow-bg {
+    background-color: #fac300;
+}
+
+.green-bg {
+    background-color: #0db54a;
+}
+
+.orange-bg {
+    background-color: #ff8f1c;
+}
+
+.text-container>h2 {
+    margin: 0;
+}
+
+.img-wrapper {
+    pointer-events: none;
+}
+
+.img-wrapper>img {
+    width: 100%;
+}
+
+button {
+    cursor: pointer;
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 0;
+    font-size: 1.25rem;
+}
+
+span.emoji {
+    font-size: 1.75rem;
+}
+
+.ugly-button {
     /* background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3); */
     background-color: #1ddde8;
     border: none;
@@ -70,7 +134,8 @@ p {
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-    transition: transform .2s; /* Animation */
+    transition: transform .2s;
+    /* Animation */
 }
 
 .ugly-button:hover {
@@ -85,22 +150,57 @@ p {
 }
 
 @-webkit-keyframes rainbow {
-    0%{background-position:0% 82%}
-    50%{background-position:100% 19%}
-    100%{background-position:0% 82%}
+    0% {
+        background-position: 0% 82%
+    }
+
+    50% {
+        background-position: 100% 19%
+    }
+
+    100% {
+        background-position: 0% 82%
+    }
 }
+
 @-moz-keyframes rainbow {
-    0%{background-position:0% 82%}
-    50%{background-position:100% 19%}
-    100%{background-position:0% 82%}
+    0% {
+        background-position: 0% 82%
+    }
+
+    50% {
+        background-position: 100% 19%
+    }
+
+    100% {
+        background-position: 0% 82%
+    }
 }
+
 @-o-keyframes rainbow {
-    0%{background-position:0% 82%}
-    50%{background-position:100% 19%}
-    100%{background-position:0% 82%}
+    0% {
+        background-position: 0% 82%
+    }
+
+    50% {
+        background-position: 100% 19%
+    }
+
+    100% {
+        background-position: 0% 82%
+    }
 }
-@keyframes rainbow { 
-    0%{background-position:0% 82%}
-    50%{background-position:100% 19%}
-    100%{background-position:0% 82%}
+
+@keyframes rainbow {
+    0% {
+        background-position: 0% 82%
+    }
+
+    50% {
+        background-position: 100% 19%
+    }
+
+    100% {
+        background-position: 0% 82%
+    }
 }
