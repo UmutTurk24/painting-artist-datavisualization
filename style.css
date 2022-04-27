@@ -18,9 +18,14 @@ body {
     margin: 0.25em 0 1em 0;
 }
 
+.home-text {
+    margin-bottom: 2em;
+}
+
 p {
     font-size: 1.25rem;
     line-height: 1.5;
+    margin-bottom: auto;
 }
 
 .bar-chart {
@@ -58,6 +63,11 @@ p {
     }
 }
 
+.footer>p {
+    display: flex;
+    justify-content: space-between;
+}
+
 .moma-grid {
     height: 30rem;
     display: grid;
@@ -90,6 +100,10 @@ p {
     background-color: #fac300;
 }
 
+.blue-bg {
+    background-color: #2b7ef7;
+}
+
 .green-bg {
     background-color: #0db54a;
 }
@@ -107,100 +121,11 @@ p {
 }
 
 .img-wrapper>img {
+    object-fit: cover;
     width: 100%;
-}
-
-button {
-    cursor: pointer;
-    background: none;
-    border: none;
-    text-align: left;
-    padding: 0;
-    font-size: 1.25rem;
+    height: 100%;
 }
 
 span.emoji {
     font-size: 1.75rem;
-}
-
-.ugly-button {
-    /* background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3); */
-    background-color: #1ddde8;
-    border: none;
-    border-radius: 1em;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    transition: transform .2s;
-    /* Animation */
-}
-
-.ugly-button:hover {
-    cursor: pointer;
-    background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
-    -webkit-animation: rainbow 18s ease infinite;
-    -z-animation: rainbow 18s ease infinite;
-    -o-animation: rainbow 18s ease infinite;
-    background-size: 1800% 1800%;
-    animation: rainbow 3s ease infinite;
-    transform: scale(1.2);
-}
-
-@-webkit-keyframes rainbow {
-    0% {
-        background-position: 0% 82%
-    }
-
-    50% {
-        background-position: 100% 19%
-    }
-
-    100% {
-        background-position: 0% 82%
-    }
-}
-
-@-moz-keyframes rainbow {
-    0% {
-        background-position: 0% 82%
-    }
-
-    50% {
-        background-position: 100% 19%
-    }
-
-    100% {
-        background-position: 0% 82%
-    }
-}
-
-@-o-keyframes rainbow {
-    0% {
-        background-position: 0% 82%
-    }
-
-    50% {
-        background-position: 100% 19%
-    }
-
-    100% {
-        background-position: 0% 82%
-    }
-}
-
-@keyframes rainbow {
-    0% {
-        background-position: 0% 82%
-    }
-
-    50% {
-        background-position: 100% 19%
-    }
-
-    100% {
-        background-position: 0% 82%
-    }
 }

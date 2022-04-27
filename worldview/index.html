@@ -8,36 +8,164 @@
     <title>Worldview</title>
     <!-- CSS -->
     <link rel="stylesheet" href="../style.css">
-    <!-- JS -->
+    <link rel="stylesheet" href="tip.css">
+
+</head>
+
+<body>
+    <div class="container">
+        <h1>MoMA over the World</h1>
+        <p>
+            As a part of our examination of the artists featured in the
+            Museum of Modern Art, we decided to visualize the country
+            of origin of the artworks exhibited in a choropleth map,
+            where color indicates the number of artworks whose artists
+            are born in each country – i.e. the United States has a
+            value of 53,820, meaning that there are 53,820 artworks in
+            the MoMA database who have at least one artist from the US.
+            In this examination, we hope to understand the inequities
+            in representation at MoMA through factors other than
+            gender.
+        </p>
+        <svg id="map"></svg>
+        <p>
+            It is necessary to first recognize that the recorded
+            nationality of an artist is not a whole representation of
+            their cultural background and consequently, not an entirely
+            accurate indicator of over- or underrepresented
+            communities. First, an artist’s nationality is often a
+            legal matter that does not fully reflect the artist’s
+            identity. For example, an artist born in the US to an
+            immigrant family would be recorded as American but might
+            identify with their family’s country of origin and had
+            their lived experiences be affected by their immigrant
+            identity.
+        </p>
+        <p>
+            Further, the map cannot account for the internal
+            differences within each country. For example, the U.S. has
+            significantly more artworks at MoMA than any other country;
+            however, there are underrepresented communities within the
+            US. Similarly, an artist from an underrepresented country
+            might be in a position of privilege and being exhibited due
+            to their proximity/palatability to the MoMA’s audience.
+            Nonetheless, we believe that this choropleth map suggests
+            the MoMA’s preference for American and Western (European)
+            artists over other regions.
+        </p>
+        <p>
+            In this map, we decided to use a log scale to display color
+            (as opposed to a linear mapping). The disparity between the
+            highest represented countries (US, France, Germany) and the
+            least represented countries (or unrepresented countries, in
+            white) was so large that China, whose artists have
+            [exhibited 284 works] at MoMA, and Russia, whose artists
+            have [exhibited 2,501 works] were lumped in the same
+            category.
+        </p>
+        <p>
+            As such, though the log scale minimizes the perceived
+            inequality between over- and underrepresented countries, it
+            allows us to carry a more nuanced analysis of regional
+            underrepresentation and of MoMA’s preference for
+            traditional (and Western) artistic production.
+        </p>
+    </div>
+
+    <!-- JS Scripts -->
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="https://d3js.org/queue.v1.min.js"></script>
     <script src="https://d3js.org/topojson.v1.min.js"></script>
     <script src="https://d3js.org/d3-color.v1.min.js"></script>
     <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
-    <script src="https://unpkg.com/d3-simple-slider"></script>
     <script src="d3-tip.js"></script>
-</head>
 
-<body>
-    <div class="container">
-        <div class="container">
-            <h1>MoMA over the World</h1>
-            <p>
-                MoMA artists over the world
-            </p>
-            <svg id="chart"></svg>
-            <p>
-                Explanation
-            </p>
-            <p>
-                More Explanations
-            </p>
-        </div>
 
-        <script>
+    <!-- D3 -->
+    <script>
+        // Update the format to % 
+        var format = d3.format(",");
 
-        </script>
+        // Set tooltips
+        var tip = d3.tip()
+            .attr('class', 'd3-tip')
+            // .offset([200, 0])
+            .html(function (d) {
+                return "<strong>Country: </strong><span class='details'>" +
+                    d.properties.name + "<br></span>" +
+                    "<strong>Artworks from " + d.properties.name + ": </strong><span class='details'>"
+                    + (d.count ? format(Math.pow(10, d.count)) : "0") + "</span>";
+            })
+
+        var margin = { top: 0, right: 0, bottom: 0, left: 0 },
+            width = 960 - margin.left - margin.right,
+            height = 600 - margin.top - margin.bottom;
+
+        const gradient = ["#ffffe5", "#f7fcc4", "#e4f4ac", "#c7e89b", "#a2d88a", "#78c578", "#4eaf63", "#2f944e", "#15793f", "#036034", "#004529"]
+
+        var color = d3.scaleQuantize()
+            .range(gradient);
+
+        var path = d3.geoPath();
+
+        var svg = d3.select("#map")
+            .attr('class', 'bar-chart')
+            .attr("width", width)
+            .attr("height", height)
+            .style("background-color", '#9ecae1')
+            .append('g')
+        // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        var projection = d3.geoMercator()
+            .scale(130)
+            .translate([width / 2, height / 1.5]);
+
+        var path = d3.geoPath().projection(projection);
+
+        svg.call(tip);
+
+        queue()
+            .defer(d3.json, "world.geo.json")
+            .defer(d3.json, "Country-count.json")
+            .await(ready);
+
+        function ready(error, world, countries) {
+            world.features.forEach(d => {
+                if (countries[d.properties.name]) {
+                    d.count = Math.log10(countries[d.properties.name].count)
+                } else {
+                    d.count = 0;
+                }
+            });
+
+            color.domain([0, d3.max(world.features, d => d.count)])
+
+            var countryShapes = svg.append("g")
+                .attr("class", "countries")
+                .selectAll("path")
+                .data(world.features)
+                .enter().append("path")
+                .attr("d", path)
+                .style("fill", d => d.count ? color(d.count) : "white")
+                .style('stroke', 'grey')
+                .style('stroke-width', .3)
+                .on('mouseover', function (d) {
+                    tip.show(d);
+                    d3.select(this)
+                        .style("stroke", "#FFA500")
+                        .style("stroke-width", 2)
+                        .raise();
+                })
+                .on('mouseout', function (d) {
+                    tip.hide(d);
+                    d3.select(this)
+                        .style("stroke", "grey")
+                        .style("stroke-width", 0.3);
+                });
+        }
+
+    </script>
 </body>
 
 </html>
