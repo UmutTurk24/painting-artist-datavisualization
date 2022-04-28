@@ -29,31 +29,6 @@
         </p>
         <svg id="map"></svg>
         <p>
-            It is necessary to first recognize that the recorded
-            nationality of an artist is not a whole representation of
-            their cultural background and consequently, not an entirely
-            accurate indicator of over- or underrepresented
-            communities. First, an artist’s nationality is often a
-            legal matter that does not fully reflect the artist’s
-            identity. For example, an artist born in the US to an
-            immigrant family would be recorded as American but might
-            identify with their family’s country of origin and had
-            their lived experiences be affected by their immigrant
-            identity.
-        </p>
-        <p>
-            Further, the map cannot account for the internal
-            differences within each country. For example, the U.S. has
-            significantly more artworks at MoMA than any other country;
-            however, there are underrepresented communities within the
-            US. Similarly, an artist from an underrepresented country
-            might be in a position of privilege and being exhibited due
-            to their proximity/palatability to the MoMA’s audience.
-            Nonetheless, we believe that this choropleth map suggests
-            the MoMA’s preference for American and Western (European)
-            artists over other regions.
-        </p>
-        <p>
             In this map, we decided to use a log scale to display color
             (as opposed to a linear mapping). The disparity between the
             highest represented countries (US, France, Germany) and the
@@ -70,15 +45,57 @@
             underrepresentation and of MoMA’s preference for
             traditional (and Western) artistic production.
         </p>
+        <p> To better visualize the disparity between the most and least
+            represented countries, we turn to a circle pack graph,
+            where each circle represents a country represented at MoMA and
+            its size represents to how many artworks came from artists born
+            in this country. The colors of each circle represents the
+            continent.
+        </p>
+        <svg id="circles"></svg>
+        <p class="caption"><em>Drag any two countries together to compare
+                their representation at MoMA.</em></p>
+        <p> First, it is important to note there are less circles tham
+            countries on the map. That is, this re-emphasizes how many
+            countries are unrepresented by the MoMA.
+            Further, North America (specifically the United States) and
+            Europe are significantly more prevalent than other continents,
+            with South America trailing both.</p>
+        <p>
+            It is necessary to first recognize that the recorded
+            nationality of an artist is not a whole representation of
+            their cultural background and consequently, not an entirely
+            accurate indicator of over- or underrepresented
+            communities. First, an artist’s nationality is often a
+            legal matter that does not fully reflect the artist’s
+            identity. For example, an artist born in the US to an
+            immigrant family would be recorded as American but might
+            identify with their family’s country of origin and had
+            their lived experiences be affected by their immigrant
+            identity.
+        </p>
+        <p>
+            Further, these visualizations cannot account for the internal
+            differences within each country. For example, the U.S. has
+            significantly more artworks than any other country;
+            however, there are underrepresented communities within the
+            US. Similarly, an artist from an underrepresented country
+            might be in a position of privilege and being exhibited due
+            to their proximity/palatability to the MoMA’s audience.
+            Nonetheless, we believe that both of these graphs suggest
+            the MoMA’s bias towards American and Western (European)
+            artists.
+        </p>
     </div>
 
     <!-- JS Scripts -->
-    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://d3js.org/queue.v1.min.js"></script>
     <script src="https://d3js.org/topojson.v1.min.js"></script>
     <script src="https://d3js.org/d3-color.v1.min.js"></script>
     <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src="https://d3js.org/d3-queue.v3.min.js"></script>
     <script src="d3-tip.js"></script>
 
 
@@ -98,9 +115,8 @@
                     + (d.count ? format(Math.pow(10, d.count)) : "0") + "</span>";
             })
 
-        var margin = { top: 0, right: 0, bottom: 0, left: 0 },
-            width = 960 - margin.left - margin.right,
-            height = 600 - margin.top - margin.bottom;
+        var width = 960,
+            height = 600;
 
         const gradient = ["#ffffe5", "#f7fcc4", "#e4f4ac", "#c7e89b", "#a2d88a", "#78c578", "#4eaf63", "#2f944e", "#15793f", "#036034", "#004529"]
 
@@ -109,13 +125,12 @@
 
         var path = d3.geoPath();
 
-        var svg = d3.select("#map")
+        var map = d3.select("#map")
             .attr('class', 'bar-chart')
             .attr("width", width)
             .attr("height", height)
             .style("background-color", '#9ecae1')
             .append('g')
-        // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
         var projection = d3.geoMercator()
             .scale(130)
@@ -123,48 +138,175 @@
 
         var path = d3.geoPath().projection(projection);
 
-        svg.call(tip);
+        map.call(tip);
 
-        queue()
-            .defer(d3.json, "world.geo.json")
-            .defer(d3.json, "Country-count.json")
-            .await(ready);
-
-        function ready(error, world, countries) {
-            world.features.forEach(d => {
-                if (countries[d.properties.name]) {
-                    d.count = Math.log10(countries[d.properties.name].count)
-                } else {
-                    d.count = 0;
-                }
-            });
-
-            color.domain([0, d3.max(world.features, d => d.count)])
-
-            var countryShapes = svg.append("g")
-                .attr("class", "countries")
-                .selectAll("path")
-                .data(world.features)
-                .enter().append("path")
-                .attr("d", path)
-                .style("fill", d => d.count ? color(d.count) : "white")
-                .style('stroke', 'grey')
-                .style('stroke-width', .3)
-                .on('mouseover', function (d) {
-                    tip.show(d);
-                    d3.select(this)
-                        .style("stroke", "#FFA500")
-                        .style("stroke-width", 2)
-                        .raise();
-                })
-                .on('mouseout', function (d) {
-                    tip.hide(d);
-                    d3.select(this)
-                        .style("stroke", "grey")
-                        .style("stroke-width", 0.3);
+        Promise.all([
+            d3.json('world.geo.json'),
+            d3.json('Country-count.json')
+        ])
+            .then(([world, countries]) => {
+                world.features.forEach(d => {
+                    if (countries[d.properties.name]) {
+                        d.count = Math.log10(countries[d.properties.name].count)
+                    } else {
+                        d.count = 0;
+                    }
                 });
-        }
 
+                color.domain([0, d3.max(world.features, d => d.count)])
+
+                var countryShapes = map.append("g")
+                    .attr("class", "countries")
+                    .selectAll("path")
+                    .data(world.features)
+                    .enter().append("path")
+                    .attr("d", path)
+                    .style("fill", d => d.count ? color(d.count) : "white")
+                    .style('stroke', 'grey')
+                    .style('stroke-width', .3)
+                    .on('mouseover', function (d) {
+                        tip.show(d);
+                        d3.select(this)
+                            .style("stroke", "#FFA500")
+                            .style("stroke-width", 2)
+                            .raise();
+                    })
+                    .on('mouseout', function (d) {
+                        tip.hide(d);
+                        d3.select(this)
+                            .style("stroke", "grey")
+                            .style("stroke-width", 0.3);
+                    });
+            })
+    </script>
+
+    <script>
+        // Constants
+        var width = 960,
+            height = 560;
+
+        // Chart SVGs
+        var circles = d3.select("#circles")
+            .attr("width", width)
+            .attr("height", height)
+            .attr("class", "bar-chart")
+            .append("g");
+
+        // Update the format to % 
+        var format = d3.format(",");
+
+        const drawLegend = (svg, data, color) => {
+            svg
+                .selectAll("mydots")
+                .data(data)
+                .enter()
+                .append("circle")
+                .attr("cx", 40)
+                .attr("cy", (d, i) => 40 + i * 25)
+                .attr("r", 7)
+                .style("fill", d => color(d));
+
+            svg
+                .selectAll("mylabels")
+                .data(data)
+                .enter()
+                .append("text")
+                .attr("x", 60)
+                .attr("y", (d, i) => 41.5 + i * 25)
+                .style("fill", "black")
+                .text(d => d)
+                .attr("text-anchor", "left")
+                .style("alignment-baseline", "middle");
+        };
+
+        // Set tooltips
+        var tooltip = d3.tip()
+            .attr('class', 'd3-tip')
+            // .offset([200, 0])
+            .html(function (d) {
+                return "<span class='details'><strong>" +
+                    d.Country + "</strong><br></span>" +
+                    "<span class='details'>"
+                    + (d.count ? format(d.count) : "0") + " Artworks</span>";
+            })
+
+        circles.call(tooltip);
+
+        d3.json('Artworks-circles.json').then(data => {
+            data = d3.values(data)
+            const continents = ["Asia", "Europe", "North America", "South America", "Africa", "Oceania"]
+            // Color palette for continents?
+            var color = d3.scaleOrdinal()
+                .domain(continents)
+                .range(d3.schemeSet2);
+
+            // Size scale for countries
+            var size = d3.scaleLinear()
+                .domain([0, d3.max(data, d => d.count)])
+                .range([10, d3.max(data, d => d.count)])  // circle will be between 7 and 55 px wide
+
+            // Draw Legend
+            drawLegend(circles, continents, color);
+
+            // Initialize the circle: all located at the center of the svg area
+            var node = circles.append("g")
+                .selectAll("circle")
+                .data(data)
+                .enter()
+                .append("circle")
+                .attr("class", "node")
+                .attr("r", d => Math.sqrt(size(d.count) / Math.PI))
+                .attr("cx", width / 2)
+                .attr("cy", height / 2)
+                .style("fill", d => color(d.continent))
+                .attr("stroke", "black")
+                .style("stroke-width", 1)
+                .on('mouseover', d => {
+                    tooltip.show(d);
+                    console.log(d3.select(this))
+                })
+                .on('mouseout', d => {
+                    tooltip.hide(d);
+                })
+                .call(d3.drag() // call specific function when circle is dragged
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended));
+
+            // Features of the forces applied to the nodes:
+            var simulation = d3.forceSimulation()
+                .force("center", d3.forceCenter().x(width / 2).y(height / 2)) // Attraction to the center of the svg area
+                .force("charge", d3.forceManyBody().strength(.5)) // Nodes are attracted one each other of value is > 0
+                .force("collide", d3.forceCollide().strength(.1).radius(d => (Math.sqrt(size(d.count) / Math.PI) + 5)).iterations(1)) // Force that avoids circle overlapping
+
+            // Apply these forces to the nodes and update their positions.
+            // Once the force algorithm is happy with positions ('alpha' value is low enough), simulations will stop.
+            simulation
+                .nodes(data)
+                .on("tick", function (d) {
+                    node
+                        .attr("cx", d => d.x)
+                        .attr("cy", d => d.y)
+                });
+
+            // What happens when a circle is dragged?
+            function dragstarted(d) {
+                if (!d3.event.active) simulation.alphaTarget(.03).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+            function dragged(d) {
+                d.fx = d3.event.x;
+                d.fy = d3.event.y;
+            }
+            function dragended(d) {
+                if (!d3.event.active) simulation.alphaTarget(.03);
+                d.fx = null;
+                d.fy = null;
+            }
+
+
+        });
     </script>
 </body>
 
