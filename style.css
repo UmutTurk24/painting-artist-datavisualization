@@ -250,3 +250,8 @@ svg {
     position: relative;
     /* visibility: hidden; */
 }
+.caption {
+    font-size: 1em;
+    color: gray;
+    text-align: center;
+}

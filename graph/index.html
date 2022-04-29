@@ -7,24 +7,130 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="tip.css">
+
+    <style>
+        .node:hover {
+            stroke-width: 2px !important;
+        }
+    </style>
 </head>
 
 <body>
+
     <div class="container">
         <h1>
-            Graph
+            Graph Temporary
         </h1>
-        <p>
-            Words
-        </p>
-        <p>
-            More words
-        </p>
         <svg id="chart"></svg>
     </div>
-    <script src="https://d3js.org/d3.v4.min.js"></script>
+
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src="d3-tip.js"></script>
 
     <script>
+        // Constants
+        var width = 960,
+            height = 750;
+
+        // Chart SVGs
+        var svg = d3.select("#chart")
+            .attr("width", width)
+            .attr("height", height)
+            .attr("class", "bar-chart")
+            .append("g");
+
+
+        // Update the format to % 
+        var format = d3.format(",");
+
+        // Set tooltips
+        var tip = d3.tip()
+            .attr('class', 'd3-tip')
+            // .offset([200, 0])
+            .html(function (d) {
+                return "<span class='details'><strong>" +
+                    d.Country + "</strong><br></span>" +
+                    "<span class='details'>"
+                    + (d.count ? format(d.count) : "0") + " Artworks</span>";
+            })
+
+        svg.call(tip);
+
+        data = d3.json('Artworks-circles.json').then(data => {
+            console.log(data)
+            data = d3.values(data)
+
+            // Color palette for continents?
+            var color = d3.scaleOrdinal()
+                .domain(["Asia", "Europe", "North America", "South America", "Africa", "Oceania"])
+                .range(d3.schemeSet2);
+
+            // Size scale for countries
+            var size = d3.scaleLinear()
+                .domain([0, d3.max(data, d => d.count)])
+                .range([10, d3.max(data, d => d.count)])  // circle will be between 7 and 55 px wide
+
+            // Initialize the circle: all located at the center of the svg area
+            var node = svg.append("g")
+                .selectAll("circle")
+                .data(data)
+                .enter()
+                .append("circle")
+                .attr("class", "node")
+                .attr("r", d => Math.sqrt(size(d.count) / Math.PI))
+                .attr("cx", width / 2)
+                .attr("cy", height / 2)
+                .style("fill", d => color(d.continent))
+                .attr("stroke", "black")
+                .style("stroke-width", 1)
+                .on('mouseover', d => {
+                    tip.show(d);
+                    // d3.select(this)
+                    //     .attr("stroke-width", 2)
+                    //     .raise();
+                })
+                .on('mouseout', d => {
+                    tip.hide(d);
+                })
+                .call(d3.drag() // call specific function when circle is dragged
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended));
+
+            // Features of the forces applied to the nodes:
+            var simulation = d3.forceSimulation()
+                .force("center", d3.forceCenter().x(width / 2).y(height / 2)) // Attraction to the center of the svg area
+                .force("charge", d3.forceManyBody().strength(.2)) // Nodes are attracted one each other of value is > 0
+                .force("collide", d3.forceCollide().strength(.1).radius(d => (Math.sqrt(size(d.count) / Math.PI) + 5)).iterations(1)) // Force that avoids circle overlapping
+
+            // Apply these forces to the nodes and update their positions.
+            // Once the force algorithm is happy with positions ('alpha' value is low enough), simulations will stop.
+            simulation
+                .nodes(data)
+                .on("tick", function (d) {
+                    node
+                        .attr("cx", d => d.x)
+                        .attr("cy", d => d.y)
+                });
+
+            // What happens when a circle is dragged?
+            function dragstarted(d) {
+                if (!d3.event.active) simulation.alphaTarget(.03).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+            function dragged(d) {
+                d.fx = d3.event.x;
+                d.fy = d3.event.y;
+            }
+            function dragended(d) {
+                if (!d3.event.active) simulation.alphaTarget(.03);
+                d.fx = null;
+                d.fy = null;
+            }
+        });
     </script>
 </body>
 
