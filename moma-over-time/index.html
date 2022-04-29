@@ -6,6 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MoMA Over Time</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
   <link rel="stylesheet" href="../style.css" />
 </head>
@@ -49,6 +50,7 @@
     
 
     <div class = "mytype">
+      <svg id="chart"></svg>
       <div class="loader" id= "loader1">
           <div class="loader-inner">
               <div class="loader-line-wrap">
@@ -67,17 +69,8 @@
                   <div class="loader-line"></div>
               </div>
           </div>
-      </div>
-
-      <svg id="chart"></svg>
-      
-      
+      </div>      
   </div>
-
-    <!-- <svg id="chart"></svg> -->
-
-
-
 
     <p>
       First, it is important to note that our dataset is not perfect. For
@@ -95,7 +88,6 @@
       reveals the MoMA's tendency to exhibit art created by male artists.
     </p>
     <p>
-      
       In the graph, it can be seen that the museum only acquired its first
       works created by female artists in the early 30s, roughly 5 years
       after its creation. From here, it has consistently acquired more art
@@ -109,7 +101,29 @@
         historic exhibitions</a> presented by the MoMA in this decade.
     </p>
     
-    <svg id="chartCumulative"></svg>
+
+    <div class = "mytype">
+      <svg id="chartCumulative"></svg>
+      <div class="loader" id= "loader2">
+          <div class="loader-inner">
+              <div class="loader-line-wrap">
+                  <div class="loader-line"></div>
+              </div>
+              <div class="loader-line-wrap">
+                  <div class="loader-line"></div>
+              </div>
+              <div class="loader-line-wrap">
+                  <div class="loader-line"></div>
+              </div>
+              <div class="loader-line-wrap">
+                  <div class="loader-line"></div>
+              </div>
+              <div class="loader-line-wrap">
+                  <div class="loader-line"></div>
+              </div>
+          </div>
+      </div>  
+    </div>
 
    
     <p>
@@ -119,6 +133,7 @@
       where the gap decreases do not account for the noticeably larger gap
       in decreasing the representation gap at the MoMA, as seen by the
       cumulative graph above.
+    </p>
   </div>
 
   <script src="https://d3js.org/d3.v5.min.js"></script>
@@ -135,7 +150,7 @@
       .select("#chart")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
-      .attr("class", "bar-chart")
+      .attr("class", "time-chart")
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -143,7 +158,7 @@
       .select("#chartCumulative")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
-      .attr("class", "bar-chart")
+      .attr("class", "time-chart")
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -321,33 +336,45 @@
 
 <script>
 
+var chart1Exist = false;
+var chart2Exist = false;
 
-  if (document.getElementsByClassName("gender1")) {
-      console.log("Element exists!");
-      var svgVar = document.getElementsByClassName("gender1");
-      var myloader = document.getElementsByClassName("loader");
-      console.log(myloader);
+const interval = window.setInterval(function() {
+  if (document.getElementsByClassName("gender1") && !chart1Exist) {
+      chart1Exist = true;
+      var myloader1 = document.getElementById("loader1");
       setTimeout(() => {
-          // myloader.item(0).remove();
+          myloader1.remove();
+          var svz = document.getElementById("chart");
+          svz.style.zIndex = 100;
+      }, "1000");
+      $(window).on('load',function(){
+      $(myloader1).fadeOut(1000);
+  
+  });}
+
+  if (document.getElementsByClassName("gender2") && !chart2Exist){
+      chart2Exist = true;
+      var svgVar = document.getElementsByClassName("gender2");
+      var myloader2 = document.getElementById("loader2");
+      setTimeout(() => {
+          myloader2.remove();
           var svz = document.getElementById("chartCumulative");
           svz.style.zIndex = 100;
-          console.log("Delayed for 1 second.");
-      }, "2000")
-      ;
-      console.log(svgVar);
-      var mySvg = document.getElementsByClassName("mytype");
-      // mySvg.item(0).remove();
-      // svgVar.setAttribute("visibility", "visible");
-      // svgVar[0].setAttribute("visibility", "visible");
+      }, "1000");
       $(window).on('load',function(){
-      $(".loader").fadeOut(1000);
-      $(".loader").fadeOut(4000);
-      $(".chartCumulative").fadeIn(2000);
-
+      $(myloader2).fadeOut(1000);
   });
-  } else {
-  console.log("Element DOES NOT exist!");
   }
+
+  if (chart2Exist && chart1Exist) {
+    clearInterval(interval); // thanks @Luca D'Amico
+  }
+
+ }, 500);
+
+
+
 
   
 </script>
