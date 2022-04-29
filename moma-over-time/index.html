@@ -7,6 +7,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MoMA Over Time</title>
   <link rel="shortcut icon" href="../favicon.svg" type="image/x-icon">
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
   <link rel="stylesheet" href="../style.css" />
   <link rel="stylesheet" href="../inside.css" />
 </head>
@@ -345,9 +347,7 @@
     });
   </script>
 
-
-  <script>
-
+<script>
     var chart1Exist = false;
     var chart2Exist = false;
 
@@ -359,18 +359,15 @@
           myloader1.remove();
           var svz = document.getElementById("chart");
           svz.style.zIndex = 100;
-        }, "1000");
-        $(window).on('load', function () {
-          $(myloader1).fadeOut(1000);
+      }, "1000");
+      $(window).on('load',function(){
+      $(myloader1).fadeOut(1000);
+  });}
 
-        });
-      }
-
-      if (document.getElementsByClassName("gender2") && !chart2Exist) {
-        chart2Exist = true;
-        var svgVar = document.getElementsByClassName("gender2");
-        var myloader2 = document.getElementById("loader2");
-        setTimeout(() => {
+  if (document.getElementsByClassName("gender2") && !chart2Exist){
+      chart2Exist = true;
+      var myloader2 = document.getElementById("loader2");
+      setTimeout(() => {
           myloader2.remove();
           var svz = document.getElementById("chartCumulative");
           svz.style.zIndex = 100;
@@ -379,18 +376,12 @@
           $(myloader2).fadeOut(1000);
         });
       }
-
-      if (chart2Exist && chart1Exist) {
-        clearInterval(interval); // thanks @Luca D'Amico
-      }
-
-    }, 500);
-
-
-
-
-
-  </script>
+  if (chart2Exist && chart1Exist) {
+    clearInterval(interval); // thanks @Luca D'Amico
+  }
+ }, 500);
+  
+</script>
 
 </body>
 
