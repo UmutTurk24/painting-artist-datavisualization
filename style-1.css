@@ -28,13 +28,6 @@ p {
     margin-bottom: auto;
 }
 
-.time-chart {
-    /* border: dashed 2px #333;
-    border-radius: 10px;
-    background: white;
-    margin-top: 1em; */
-}
-
 .bar-chart {
     border: dashed 2px #333;
     border-radius: 10px;
@@ -135,6 +128,12 @@ p {
 
 span.emoji {
     font-size: 1.75rem;
+}
+
+.caption {
+    font-size: 1em;
+    color: gray;
+    text-align: center;
 }
 
 
@@ -262,15 +261,9 @@ span.emoji {
     position: relative;
 }
 
+
 svg {
     z-index: -1;
     position: relative;
     /* visibility: hidden; */
-}
-
-
-.caption {
-    font-size: 1em;
-    color: gray;
-    text-align: center;
 }
