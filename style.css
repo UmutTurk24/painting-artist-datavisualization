@@ -140,7 +140,7 @@ span.emoji {
 }
 
 .node:hover {
-    stroke-width: 2;
+    stroke-width: 2 !important;
 }
 
 /* Loader Animation */
