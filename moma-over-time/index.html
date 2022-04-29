@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MoMA Over Time</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
   <link rel="stylesheet" href="../style.css" />
 </head>
@@ -333,7 +333,6 @@
     });
   </script>
 
-
 <script>
 
 var chart1Exist = false;
@@ -350,12 +349,10 @@ const interval = window.setInterval(function() {
       }, "1000");
       $(window).on('load',function(){
       $(myloader1).fadeOut(1000);
-  
   });}
 
   if (document.getElementsByClassName("gender2") && !chart2Exist){
       chart2Exist = true;
-      var svgVar = document.getElementsByClassName("gender2");
       var myloader2 = document.getElementById("loader2");
       setTimeout(() => {
           myloader2.remove();
@@ -370,12 +367,7 @@ const interval = window.setInterval(function() {
   if (chart2Exist && chart1Exist) {
     clearInterval(interval); // thanks @Luca D'Amico
   }
-
  }, 500);
-
-
-
-
   
 </script>
 

@@ -5,28 +5,42 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>variety</title>
+    <title>Variety</title>
 
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="tip.css">
 </head>
 
-<style>
-
-</style>
-
 <body>
-    <script src="https://d3js.org/d3.v5.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://d3js.org/queue.v1.min.js"></script>
+    <script src="https://d3js.org/topojson.v1.min.js"></script>
+    <script src="https://d3js.org/d3-color.v1.min.js"></script>
+    <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src="https://d3js.org/d3-queue.v3.min.js"></script>
+    <script src="d3-tip.js"></script>
+
     <h1>Hello</h1>
     <div class="container">
         
         <div id="my_dataviz"></div>
-
             <!-- <h3 style="text-align: center;">Bar-Chart 1</h3> -->
-        
     </div>
-</body>
+
 
 <script>
+
+    // var tip = d3.tip()
+    //     .attr('class', 'd3-tip')
+    //     // .offset([200, 0])
+    //     .html(function (d) {
+    //         return "";
+    //         // "<strong>Type: </strong><span class='details'>" +
+    //         //     d.properties.name + "<br></span>" +
+    //         //     "<strong>Artworks from " + d.properties.name + ": </strong><span class='details'>"
+    //         //     + (d.count ? format(Math.pow(10, d.count)) : "0") + "</span>";
+    //         })
     // Constants
     var margin = { top: 20, right: 30, bottom: 70, left: 100 },
         width = 760 - margin.left - margin.right,
@@ -40,14 +54,10 @@
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-
-    
-
     // Reading the data
     data = d3.json('Artworks-test-Umut-3.json').then(data => {
         data = d3.values(data)
         data.sort((a,b) => d3.ascending(a.Date, b.Date))
-        console.log(data)
         const mySet1 = new Set();
         data.forEach(d => {
             mySet1.add(d.Type);
@@ -60,12 +70,7 @@ Film, Video, Media, Performance, Audio -> Digital Media & Performance
 Sculpture, Textile, Installation -> Installation
 Photograph, Photography Res. -> Photography
     */
-//  
 
-    // var mygroups = ["Architecture", "Design", /*"Mies van der Rohe Archive"*/, "Illustrated Book", "Print", "Drawing", 
-    // "Film", "Multiple", "Periodical", "Photograph", "Painting", /*"(not assigned)"*/, "Product Design", "Video", "Media",
-    // "Photography Research/Reference", "Software", "Sculpture", "Textile", "Installation", "Work on Paper", "Performance",
-    // "Audio", "Ephemera", "Collage", "Poster", "Graphic Design", "Furniture and Interiors"] // list of group names
     var mygroups = ["Architecture & Design", "Digital Media & Performance", "Work on Paper",  "Installation",  "Photography", "Painting"]
 
     var mygroup = Array.from(Array(mygroups.length).keys())
@@ -123,7 +128,7 @@ Photograph, Photography Res. -> Photography
         .append("path")
         .style("fill", function(d) { name = mygroups[d.key-1] ; return color(name); })
         .attr("d", d3.area()
-            .x(function(d, i) {  console.log(d) ; return x(d.data.key); })
+            .x(function(d, i) { return x(d.data.key); })
             .y0(function(d) {  return y(d[0]) ; })
             .y1(function(d) {  return y(d[1]) ; })
     )
@@ -133,5 +138,5 @@ Photograph, Photography Res. -> Photography
     
 
 </script>
-
+</body>
 </html>

@@ -9,6 +9,8 @@
     <!-- CSS -->
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="tip.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 
 </head>
 
@@ -27,7 +29,28 @@
             in representation at MoMA through factors other than
             gender.
         </p>
-        <svg id="map"></svg>
+        <div class = "mytype">
+            <svg id="map"></svg>
+            <div class="loader" id= "loader1">
+                <div class="loader-inner">
+                    <div class="loader-line-wrap">
+                        <div class="loader-line"></div>
+                    </div>
+                    <div class="loader-line-wrap">
+                        <div class="loader-line"></div>
+                    </div>
+                    <div class="loader-line-wrap">
+                        <div class="loader-line"></div>
+                    </div>
+                    <div class="loader-line-wrap">
+                        <div class="loader-line"></div>
+                    </div>
+                    <div class="loader-line-wrap">
+                        <div class="loader-line"></div>
+                    </div>
+                </div>
+            </div>  
+          </div>
         <p>
             In this map, we decided to use a log scale to display color
             (as opposed to a linear mapping). The disparity between the
@@ -52,7 +75,31 @@
             in this country. The colors of each circle represents the
             continent.
         </p>
-        <svg id="circles"></svg>
+
+        <div class = "mytype">
+            <svg id="circles"></svg>
+            <div class="loader" id= "loader2">
+                <div class="loader-inner">
+                    <div class="loader-line-wrap">
+                        <div class="loader-line"></div>
+                    </div>
+                    <div class="loader-line-wrap">
+                        <div class="loader-line"></div>
+                    </div>
+                    <div class="loader-line-wrap">
+                        <div class="loader-line"></div>
+                    </div>
+                    <div class="loader-line-wrap">
+                        <div class="loader-line"></div>
+                    </div>
+                    <div class="loader-line-wrap">
+                        <div class="loader-line"></div>
+                    </div>
+                </div>
+            </div>  
+          </div>
+
+        
         <p class="caption"><em>Drag any two countries together to compare
                 their representation at MoMA.</em></p>
         <p> First, it is important to note there are less circles tham
@@ -98,7 +145,6 @@
     <script src="https://d3js.org/d3-queue.v3.min.js"></script>
     <script src="d3-tip.js"></script>
 
-
     <!-- D3 -->
     <script>
         // Update the format to % 
@@ -113,7 +159,7 @@
                     d.properties.name + "<br></span>" +
                     "<strong>Artworks from " + d.properties.name + ": </strong><span class='details'>"
                     + (d.count ? format(Math.pow(10, d.count)) : "0") + "</span>";
-            })
+        })
 
         var width = 960,
             height = 600;
@@ -126,7 +172,7 @@
         var path = d3.geoPath();
 
         var map = d3.select("#map")
-            .attr('class', 'bar-chart')
+            .attr('class', 'time-chart')
             .attr("width", width)
             .attr("height", height)
             .style("background-color", '#9ecae1')
@@ -189,8 +235,9 @@
         var circles = d3.select("#circles")
             .attr("width", width)
             .attr("height", height)
-            .attr("class", "bar-chart")
-            .append("g");
+            .attr("class", "time-chart")
+            .append("g")
+            .attr("id", "circleMap");
 
         // Update the format to % 
         var format = d3.format(",");
@@ -222,6 +269,7 @@
         // Set tooltips
         var tooltip = d3.tip()
             .attr('class', 'd3-tip')
+            // .style("z-index", 99999)
             // .offset([200, 0])
             .html(function (d) {
                 return "<span class='details'><strong>" +
@@ -307,6 +355,44 @@
 
 
         });
+    </script>
+
+<script>
+
+    var chart1Exist = false;
+    var chart2Exist = false;
+    
+    const interval = window.setInterval(function() {
+      if (document.getElementsByClassName("countries") && !chart1Exist) {
+          chart1Exist = true;
+          var myloader1 = document.getElementById("loader1");
+          setTimeout(() => {
+              myloader1.remove();
+              var svz = document.getElementById("map");
+              svz.style.zIndex = 0;
+          }, "1000");
+          $(window).on('load',function(){
+          $(myloader1).fadeOut(1000);
+      });}
+    
+      if (document.getElementsByClassName("circleMap") && !chart2Exist){
+          chart2Exist = true;
+          var myloader2 = document.getElementById("loader2");
+          setTimeout(() => {
+              myloader2.remove();
+              var svz = document.getElementById("circles");
+              svz.style.zIndex = 0;
+          }, "1000");
+          $(window).on('load',function(){
+          $(myloader2).fadeOut(1000);
+      });
+      }
+    
+      if (chart2Exist && chart1Exist) {
+        clearInterval(interval); // thanks @Luca D'Amico
+      }
+     }, 500);
+      
     </script>
 </body>
 
