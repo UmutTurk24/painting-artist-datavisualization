@@ -38,7 +38,7 @@
             in representation at MoMA through factors other than
             gender.
         </p>
-        <div class = "mytype">
+        <div class = "mytype" id ="worldChart">
             <svg id="map"></svg>
             <div class="loader" id= "loader1">
                 <div class="loader-inner">
@@ -378,6 +378,11 @@
     
     const interval = window.setInterval(function() {
       if (document.getElementsByClassName("countries") && !chart1Exist) {
+          var svgContainer =  document.getElementById("worldChart");
+          var svgSelf = document.getElementById("map");
+          svgContainer.style.border = "none";
+          svgSelf.style.border = "dashed 2px #333";
+          svgSelf.style.borderRadius = "10px";
           chart1Exist = true;
           var myloader1 = document.getElementById("loader1");
           setTimeout(() => {
