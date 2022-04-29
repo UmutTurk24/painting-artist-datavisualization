@@ -8,10 +8,57 @@
   <title>MoMA Over Time</title>
 
   <link rel="stylesheet" href="../style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 </head>
 <style>
 
 
+.loader-line-wrap:nth-child(1) { animation-delay: -50ms; }
+.loader-line-wrap:nth-child(2) { animation-delay: -100ms; }
+.loader-line-wrap:nth-child(3) { animation-delay: -150ms; }
+.loader-line-wrap:nth-child(4) { animation-delay: -200ms; }
+.loader-line-wrap:nth-child(5) { animation-delay: -250ms; }
+
+.loader-line-wrap:nth-child(1) .loader-line {
+    border-color: hsl(0, 80%, 60%);
+    height: 90px;
+    width: 90px;
+    top: 7px;
+}
+.loader-line-wrap:nth-child(2) .loader-line {
+    border-color: hsl(60, 80%, 60%);
+    height: 76px;
+    width: 76px;
+    top: 14px;
+}
+.loader-line-wrap:nth-child(3) .loader-line {
+    border-color: hsl(120, 80%, 60%);
+    height: 62px;
+    width: 62px;
+    top: 21px;
+}
+.loader-line-wrap:nth-child(4) .loader-line {
+    border-color: hsl(180, 80%, 60%);
+    height: 48px;
+    width: 48px;
+    top: 28px;
+}
+.loader-line-wrap:nth-child(5) .loader-line {
+    border-color: hsl(240, 80%, 60%);
+    height: 34px;
+    width: 34px;
+    top: 35px;
+}
+
+@keyframes spin {
+    0%, 15% {
+		transform: rotate(0);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
 
   * {
     font-family: sans-serif;
@@ -32,9 +79,75 @@
     justify-content: center;
     place-items: center;
   }
+
+
+  .loader {
+    /* background: #000; */
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    /* position: fixed; */
+    right: 0;
+    top: 0;
+    z-index: 99999;
+}
+
+.loader-inner {
+    bottom: 0;
+    height: 60px;
+    left: 0;
+    margin: auto;
+    margin-top: 22%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100px;
+}
+
+.loader-line-wrap {
+    animation: 
+		spin 2000ms cubic-bezier(.175, .885, .32, 1.275) infinite
+	;
+    box-sizing: border-box;
+    height: 50px;
+    left: 0;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    transform-origin: 50% 100%;
+    width: 100px;
+}
+.loader-line {
+    border: 4px solid transparent;
+    border-radius: 100%;
+    box-sizing: border-box;
+    height: 100px;
+    left: 0;
+    margin: 0 auto;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100px;
+}
+
+.mytype{
+    border: dashed 2px #333;
+    border-radius: 10px;
+    background: white;
+    margin-top: 1em;
+    position: relative;
+}
+
+svg {
+    z-index: -1;
+    position: relative;
+    /* visibility: hidden; */
+}
+
 </style>
 
 <body>
+
   <div class="container">
     <h1>MoMA over Time</h1>
     
@@ -45,80 +158,64 @@
       over time, we arrange the artworks in the year they were acquired by
       the museum and find the gender count of each year.
     </p>
+
     
-    
+
 
     <div class = "mytype">
-      <div class="loader" id= "loader1">
-          <div class="loader-inner">
-              <div class="loader-line-wrap">
-                  <div class="loader-line"></div>
-              </div>
-              <div class="loader-line-wrap">
-                  <div class="loader-line"></div>
-              </div>
-              <div class="loader-line-wrap">
-                  <div class="loader-line"></div>
-              </div>
-              <div class="loader-line-wrap">
-                  <div class="loader-line"></div>
-              </div>
-              <div class="loader-line-wrap">
-                  <div class="loader-line"></div>
-              </div>
-          </div>
-      </div>
+        <div class="loader">
+            <div class="loader-inner">
+                <div class="loader-line-wrap">
+                    <div class="loader-line"></div>
+                </div>
+                <div class="loader-line-wrap">
+                    <div class="loader-line"></div>
+                </div>
+                <div class="loader-line-wrap">
+                    <div class="loader-line"></div>
+                </div>
+                <div class="loader-line-wrap">
+                    <div class="loader-line"></div>
+                </div>
+                <div class="loader-line-wrap">
+                    <div class="loader-line"></div>
+                </div>
+            </div>
+        </div>
 
-      <svg id="chart"></svg>
-      
-      
-  </div>
+        <svg id="chart"></svg>
+        
+        
+    </div>
 
-    <!-- <svg id="chart"></svg> -->
-
-
-
-
-    <p>
-      First, it is important to note that our dataset is not perfect. For
-      once, the formatting of each artists gender, and the year their works
-      were acquired is inconsistent throughout the document, meaning that
-      many entries of works at the MoMA are not accuratedly accounted
-      for in this graph. Further, the dataset only accounts for male and
-      female artists. This is inaccurate as it does not include gender
-      non-binary or non-conforming artists.
-    </p>
-    <p>
-      Despite the dataset's limitation, there is still a noticeable gender
-      disparity in the artists exhibited at the Museum of Modern Art.
-      Though this graph reveals a gender disparity in artmaking, it also
-      reveals the MoMA's tendency to exhibit art created by male artists.
-    </p>
-    <p>
-      
-      In the graph, it can be seen that the museum only acquired its first
-      works created by female artists in the early 30s, roughly 5 years
-      after its creation. From here, it has consistently acquired more art
-      from male artists. There is a spike in art acquisition in the early
-      1960s, likely due to a <a
-        href="https://www.moma.org/interactives/moma_through_time/1950/moma-on-fire/"
-        target="_blank" rel="noopener noreferrer">fire in 1958</a>, which
-      forced the museum to rebuild part of its collection and the <a
-        href="https://www.artspace.com/magazine/art_101/lists/moma-archives-1960s-54286"
-        target="_blank" rel="noopener noreferrer">
-        historic exhibitions</a> presented by the MoMA in this decade.
-    </p>
     
-    <svg id="chartCumulative"></svg>
+    <div class = "mytype">
+        <svg id="chartCumulative"></svg>
+        <div class="loader" id = "load1">
+            <div class="loader-inner">
+                <div class="loader-line-wrap">
+                    <div class="loader-line"></div>
+                </div>
+                <div class="loader-line-wrap">
+                    <div class="loader-line"></div>
+                </div>
+                <div class="loader-line-wrap">
+                    <div class="loader-line"></div>
+                </div>
+                <div class="loader-line-wrap">
+                    <div class="loader-line"></div>
+                </div>
+                <div class="loader-line-wrap">
+                    <div class="loader-line"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
 
    
-    <p>
-      Although the gap between genders becomes relatively narrow at points
-      (such as the mid-2000s and late 2010s), there are consistently more
-      male artists being acquired and exhibited. Further, the small periods
-      where the gap decreases do not account for the noticeably larger gap
-      in decreasing the representation gap at the MoMA, as seen by the
-      cumulative graph above.
   </div>
 
   <script src="https://d3js.org/d3.v5.min.js"></script>
@@ -135,7 +232,7 @@
       .select("#chart")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
-      .attr("class", "bar-chart")
+      .attr("class", "time-chart")
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -143,7 +240,7 @@
       .select("#chartCumulative")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
-      .attr("class", "bar-chart")
+      .attr("class", "time-chart")
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -207,6 +304,9 @@
         .attr("text-anchor", "left")
         .style("alignment-baseline", "middle");
     };
+
+    var checkExists = 
+
 
     data = d3.json("Artworks-time.json").then((data) => {
       var genders = { Male: { key: "Male", value: {} }, Female: { key: "Female", value: {} } };
@@ -318,38 +418,36 @@
     });
   </script>
 
-
 <script>
+ 
 
+    if (document.getElementsByClassName("gender2")) {
+        console.log("Element exists!");
+        var svgVar = document.getElementsByClassName("gender1");
+        var myloader = document.getElementsByClassName("loader");
+        setTimeout(() => {
+            myloader.item(0).remove();
+            var svz = document.getElementById("chartCumulative");
+            svz.style.zIndex = 100;
+            console.log("Delayed for 1 second.");
+        }, "2000")
+        ;
+        console.log(svgVar);
+        var mySvg = document.getElementsByClassName("mytype");
+        mySvg.item(0).remove();
+        // svgVar.setAttribute("visibility", "visible");
+        // svgVar[0].setAttribute("visibility", "visible");
+        $(window).on('load',function(){
+        $(".loader").fadeOut(1000);
+        $(".loader").fadeOut(4000);
+        $(".chartCumulative").fadeIn(2000);
 
-  if (document.getElementsByClassName("gender1")) {
-      console.log("Element exists!");
-      var svgVar = document.getElementsByClassName("gender1");
-      var myloader = document.getElementsByClassName("loader");
-      console.log(myloader);
-      setTimeout(() => {
-          // myloader.item(0).remove();
-          var svz = document.getElementById("chartCumulative");
-          svz.style.zIndex = 100;
-          console.log("Delayed for 1 second.");
-      }, "2000")
-      ;
-      console.log(svgVar);
-      var mySvg = document.getElementsByClassName("mytype");
-      // mySvg.item(0).remove();
-      // svgVar.setAttribute("visibility", "visible");
-      // svgVar[0].setAttribute("visibility", "visible");
-      $(window).on('load',function(){
-      $(".loader").fadeOut(1000);
-      $(".loader").fadeOut(4000);
-      $(".chartCumulative").fadeIn(2000);
+    });
+    } else {
+    console.log("Element DOES NOT exist!");
+    }
 
-  });
-  } else {
-  console.log("Element DOES NOT exist!");
-  }
-
-  
+    
 </script>
 
 </body>
