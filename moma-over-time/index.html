@@ -6,14 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MoMA Over Time</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
+  <link rel="shortcut icon" href="../favicon.svg" type="image/x-icon">
   <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../inside.css" />
 </head>
 <style>
-
-
-
   * {
     font-family: sans-serif;
   }
@@ -36,9 +33,16 @@
 </style>
 
 <body>
+  <header class="blue-bg in-header">
+    <div class="container in-container">
+      <a class="block-link home-link" href="../">
+        <h2><span class="emoji">👈</span>&nbsp; Home</h2>
+      </a>
+    </div>
+  </header>
   <div class="container">
     <h1>MoMA over Time</h1>
-    
+
     <p>
       Continuing our investigation on gender representation at MoMA, we
       looked at the distribution of male and female artists over time. To
@@ -46,31 +50,31 @@
       over time, we arrange the artworks in the year they were acquired by
       the museum and find the gender count of each year.
     </p>
-    
-    
 
-    <div class = "mytype">
+
+
+    <div class="mytype">
       <svg id="chart"></svg>
-      <div class="loader" id= "loader1">
-          <div class="loader-inner">
-              <div class="loader-line-wrap">
-                  <div class="loader-line"></div>
-              </div>
-              <div class="loader-line-wrap">
-                  <div class="loader-line"></div>
-              </div>
-              <div class="loader-line-wrap">
-                  <div class="loader-line"></div>
-              </div>
-              <div class="loader-line-wrap">
-                  <div class="loader-line"></div>
-              </div>
-              <div class="loader-line-wrap">
-                  <div class="loader-line"></div>
-              </div>
+      <div class="loader" id="loader1">
+        <div class="loader-inner">
+          <div class="loader-line-wrap">
+            <div class="loader-line"></div>
           </div>
-      </div>      
-  </div>
+          <div class="loader-line-wrap">
+            <div class="loader-line"></div>
+          </div>
+          <div class="loader-line-wrap">
+            <div class="loader-line"></div>
+          </div>
+          <div class="loader-line-wrap">
+            <div class="loader-line"></div>
+          </div>
+          <div class="loader-line-wrap">
+            <div class="loader-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <p>
       First, it is important to note that our dataset is not perfect. For
@@ -100,32 +104,32 @@
         target="_blank" rel="noopener noreferrer">
         historic exhibitions</a> presented by the MoMA in this decade.
     </p>
-    
 
-    <div class = "mytype">
+
+    <div class="mytype">
       <svg id="chartCumulative"></svg>
-      <div class="loader" id= "loader2">
-          <div class="loader-inner">
-              <div class="loader-line-wrap">
-                  <div class="loader-line"></div>
-              </div>
-              <div class="loader-line-wrap">
-                  <div class="loader-line"></div>
-              </div>
-              <div class="loader-line-wrap">
-                  <div class="loader-line"></div>
-              </div>
-              <div class="loader-line-wrap">
-                  <div class="loader-line"></div>
-              </div>
-              <div class="loader-line-wrap">
-                  <div class="loader-line"></div>
-              </div>
+      <div class="loader" id="loader2">
+        <div class="loader-inner">
+          <div class="loader-line-wrap">
+            <div class="loader-line"></div>
           </div>
-      </div>  
+          <div class="loader-line-wrap">
+            <div class="loader-line"></div>
+          </div>
+          <div class="loader-line-wrap">
+            <div class="loader-line"></div>
+          </div>
+          <div class="loader-line-wrap">
+            <div class="loader-line"></div>
+          </div>
+          <div class="loader-line-wrap">
+            <div class="loader-line"></div>
+          </div>
+        </div>
+      </div>
     </div>
 
-   
+
     <p>
       Although the gap between genders becomes relatively narrow at points
       (such as the mid-2000s and late 2010s), there are consistently more
@@ -135,10 +139,18 @@
       cumulative graph above.
     </p>
   </div>
+  <footer class="blue-bg in-footer">
+    <div class="container footer">
+      <p>
+        <span>CSC362 Spring 2022</span>
+        <span>Miguel Donado, Umut Türk</span>
+      </p>
+    </div>
+  </footer>
 
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script>
-    
+
 
     // Constants
     var margin = { top: 20, right: 20, bottom: 70, left: 80 },
@@ -216,7 +228,7 @@
         .enter()
         .append("text")
         .attr("x", 120)
-        .attr("y", (d, i) => 100 + i * 25)
+        .attr("y", (d, i) => 101.5 + i * 25)
         .style("fill", (d) => color(d.key))
         .text((d) => d.key)
         .attr("text-anchor", "left")
@@ -334,50 +346,51 @@
   </script>
 
 
-<script>
+  <script>
 
-var chart1Exist = false;
-var chart2Exist = false;
+    var chart1Exist = false;
+    var chart2Exist = false;
 
-const interval = window.setInterval(function() {
-  if (document.getElementsByClassName("gender1") && !chart1Exist) {
-      chart1Exist = true;
-      var myloader1 = document.getElementById("loader1");
-      setTimeout(() => {
+    const interval = window.setInterval(function () {
+      if (document.getElementsByClassName("gender1") && !chart1Exist) {
+        chart1Exist = true;
+        var myloader1 = document.getElementById("loader1");
+        setTimeout(() => {
           myloader1.remove();
           var svz = document.getElementById("chart");
           svz.style.zIndex = 100;
-      }, "1000");
-      $(window).on('load',function(){
-      $(myloader1).fadeOut(1000);
-  
-  });}
+        }, "1000");
+        $(window).on('load', function () {
+          $(myloader1).fadeOut(1000);
 
-  if (document.getElementsByClassName("gender2") && !chart2Exist){
-      chart2Exist = true;
-      var svgVar = document.getElementsByClassName("gender2");
-      var myloader2 = document.getElementById("loader2");
-      setTimeout(() => {
+        });
+      }
+
+      if (document.getElementsByClassName("gender2") && !chart2Exist) {
+        chart2Exist = true;
+        var svgVar = document.getElementsByClassName("gender2");
+        var myloader2 = document.getElementById("loader2");
+        setTimeout(() => {
           myloader2.remove();
           var svz = document.getElementById("chartCumulative");
           svz.style.zIndex = 100;
-      }, "1000");
-      $(window).on('load',function(){
-      $(myloader2).fadeOut(1000);
-  });
-  }
+        }, "1000");
+        $(window).on('load', function () {
+          $(myloader2).fadeOut(1000);
+        });
+      }
 
-  if (chart2Exist && chart1Exist) {
-    clearInterval(interval); // thanks @Luca D'Amico
-  }
+      if (chart2Exist && chart1Exist) {
+        clearInterval(interval); // thanks @Luca D'Amico
+      }
 
- }, 500);
-
-
+    }, 500);
 
 
-  
-</script>
+
+
+
+  </script>
 
 </body>
 

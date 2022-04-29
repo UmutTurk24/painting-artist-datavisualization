@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../favicon.svg" type="image/x-icon">
     <title>Overview</title>
-
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../inside.css">
 </head>
 
 <style>
@@ -15,21 +16,29 @@
 </style>
 
 <body>
-    <script src="https://d3js.org/d3.v5.min.js"></script>
-
+    <header class="green-bg in-header">
+        <div class="container in-container">
+            <a class="block-link home-link" href="../">
+                <h2><span class="emoji">👈</span>&nbsp; Home</h2>
+            </a>
+        </div>
+    </header>
     <div class="container">
         <h1>Female Representation at MoMA</h1>
         <p>Based on this <a
                 href="https://www.tate.org.uk/art/artworks/guerrilla-girls-do-women-have-to-be-naked-to-get-into-the-met-museum-p78793"
                 target="_blank" rel="noopener noreferrer">
-                Guerrilla Girls poster</a>, we decided to investigate the gender distribution of artists exhibited at
+                Guerrilla Girls poster</a>, we decided to investigate the
+            gender distribution of artists exhibited at
             major museums. We asked the
-            question <i>"Is there a lack female representation at the MoMA?"</i> To answer this, we looked at a Dataset
+            question <i>"Is there a lack female representation at the
+                MoMA?"</i> To answer this, we looked at a Dataset
             of
             all artworks exhibited by the MoMA up to late 2020.
         </p>
         <p>
-            We initially assumed that there would be disproportionally more male artists exhibited, a ratio confirmed by
+            We initially assumed that there would be disproportionally more
+            male artists exhibited, a ratio confirmed by
             this dataset.
         </p>
         <div class="index-grid">
@@ -39,22 +48,29 @@
             </div>
             <div class="textbox">
                 <p>
-                    The first dataset contains the artworks exhibited at the MoMA since 1929 until roughly 2020.
-                    <b>Bar-Chart 1</b> shows the number of males and females who showcased their artwork in MoMA.
+                    The first dataset contains the artworks exhibited at
+                    the MoMA since 1929 until roughly 2020.
+                    <b>Bar-Chart 1</b> shows the number of males and
+                    females who showcased their artwork in MoMA.
                 </p>
                 <p>
-                    As we can't ignore the striking difference between how much more male artists has been part of this
-                    museum compared to female artists, we start to think about the lack of female representation.
+                    As we can't ignore the striking difference between how
+                    much more male artists has been part of this
+                    museum compared to female artists, we start to think
+                    about the lack of female representation.
                 </p>
                 <p>
-                    In order to make the difference of male and female representation look larger than it already looks
-                    like, we have changed the starting point of the y-axis, which allowed females to look like having
+                    In order to make the difference of male and female
+                    representation look larger than it already looks
+                    like, we have changed the starting point of the y-axis,
+                    which allowed females to look like having
                     little to no artworks in the museum.
                 </p>
             </div>
         </div>
 
-        <p>Moving to the second dataset, also from Kaggle, we can see another story on the gender distribution
+        <p>Moving to the second dataset, also from Kaggle, we can see
+            another story on the gender distribution
             of the artists who could showcase their artwork in MoMA. </p>
 
         <div class="index-grid">
@@ -63,167 +79,187 @@
                 <h3 style="text-align: center;">Bar-Chart 2</h3>
             </div>
             <div class="textbox">
-                <p>While there are still more male artists than female artists, <b>Bar-Chart 2</b> shows a much less
-                    dramatic difference. This is so because it counts individual artists exhibited regardless of how
-                    many artworks they had shown. It is likely that solo exhibitions and large collections of work are
-                    more more common with male artists than females, which helps explain part of the difference between
+                <p>While there are still more male artists than female
+                    artists, <b>Bar-Chart 2</b> shows a much less
+                    dramatic difference. This is so because it counts
+                    individual artists exhibited regardless of how
+                    many artworks they had shown. It is likely that solo
+                    exhibitions and large collections of work are
+                    more more common with male artists than females, which
+                    helps explain part of the difference between
                     the two.
                 </p>
             </div>
         </div>
         <p>
-            In contrast to the goal and visualization of <b>Bar-Chart 1</b>, <b>Bar-Chart 2</b> shows a less significant
-            difference between men and female representation. We wanted to emphasise that by adding a gradient color
-            from light-blue to eggwhite for the bar color, which creates the illusion of males not having a very high
-            amount of representation compared to females. We attempted to exaggerate this by shifting the minimum value
-            in the first graph, to make the difference between the two more dramatic than it truly is.
+            In contrast to the goal and visualization of <b>Bar-Chart
+                1</b>, <b>Bar-Chart 2</b> shows a less significant
+            difference between men and female representation. We wanted to
+            emphasise that by adding a gradient color
+            from light-blue to eggwhite for the bar color, which creates
+            the illusion of males not having a very high
+            amount of representation compared to females. We attempted to
+            exaggerate this by shifting the minimum value
+            in the first graph, to make the difference between the two more
+            dramatic than it truly is.
         </p>
         <p>
-            Nonetheless, despite our attempt to manipulate the data, there is a noticeable difference between male and
+            Nonetheless, despite our attempt to manipulate the data, there
+            is a noticeable difference between male and
             female artist representation at MoMA.
         </p>
     </div>
+    <footer class="green-bg in-footer">
+        <div class="container footer">
+            <p>
+                <span>CSC362 Spring 2022</span>
+                <span>Miguel Donado, Umut Türk</span>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script>
+        // Constants
+        var margin = { top: 20, right: 30, bottom: 70, left: 100 },
+            width = 560 - margin.left - margin.right,
+            height = 520 - margin.top - margin.bottom;
+
+        // Chart SVGs
+        var chart1 = d3.select("#chart1")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .attr("class", "bar-chart")
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        var chart2 = d3.select("#chart2")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .attr("class", "bar-chart")
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        // Linear Gradient
+        const defs = chart2.append('defs');
+        const bgGradient = defs
+            .append('linearGradient')
+            .attr('id', 'bg-gradient')
+            .attr('gradientTransform', 'rotate(90)');
+        bgGradient
+            .append('stop')
+            .attr('stop-color', '#fafafa')
+            .attr('offset', '20%');
+        bgGradient
+            .append('stop')
+            .attr('stop-color', 'lightblue')
+            .attr('offset', '100%');
+
+        // Draw Axes and Bars
+        const draw = (arr, min = 0, max, svg) => {
+            const x = d3.scaleBand()
+                .rangeRound([0, width])
+                .padding(0.1)
+                .domain(arr.map(d => d.gender));
+
+            const y = d3.scaleLinear()
+                .rangeRound([height, 0])
+                .domain([min, max]);
+
+            const entries = svg.selectAll("g")
+                .data(genderCount)
+                .enter()
+                .append("g");
+
+            entries.each(function (d) {
+                const entry = d3.select(this);
+                entry.append("rect")
+                    .attr("class", "bar")
+                    .attr("x", x(d.gender))
+                    .attr("y", y(d.count))
+                    .attr("height", height - y(d.count))
+                    .attr("width", x.bandwidth())
+                    .style("fill", d => d.color)
+            })
+
+            svg.append("g")
+                .attr("transform", "translate(0," + (height) + ")")
+                .call(d3.axisBottom(x));
+
+            svg.append("g")
+                .call(d3.axisLeft(y));
+
+            drawAxisLabels(svg);
+        }
+
+        const drawAxisLabels = (svg) => {
+            svg.append("text")
+                .attr("class", "x-label")
+                .attr("text-anchor", "middle")
+                .attr("x", width / 2)
+                .attr("y", height + margin.bottom * 0.65)
+                .text("Artists Gender");
+
+            svg.append("text")
+                .attr("class", "y-label")
+                .attr("text-anchor", "middle")
+                .attr("transform", "rotate(-90)")
+                .attr("x", -height / 2)
+                .attr("y", -margin.left * 0.6)
+                .text("Number of Artists");
+        }
+
+        // Reading the data
+        data = d3.json('Artworks-bc.json').then(data => {
+            genderCount = {
+                Male: { gender: "Male", count: 0, color: "lightblue" },
+                Female: { gender: "Female", count: 0, color: "lightblue" }
+            };
+            // Data processing
+            data.forEach(d => {
+                const gender = d.Gender;
+
+                // Count entries with gender of (Male), (male). Account for group artworks
+                const maleCount = gender.Male
+                genderCount["Male"].count += maleCount;
+
+                // Count entries with gender of (Female), (female). Account for group artworks
+                const femaleCount = gender.Female
+                genderCount["Female"].count += femaleCount;
+            });
+            // initializing the bars
+            genderCount = d3.values(genderCount);
+
+            const max = d3.max(genderCount, d => d.count);
+
+            draw(genderCount, 18000, max, chart1);
+        });
+
+        // Reading the data
+        data2 = d3.json('Artists.json').then(data => {
+            genderCount = {
+                Male: { gender: "Male", count: 0, color: "url(#bg-gradient)" },
+                Female: { gender: "Female", count: 0, color: "lightblue" },
+            };
+
+            // Data processing
+            data.forEach(d => {
+                const gender = d.Gender;
+
+                if (gender != null)
+                    gender == "Male" ? genderCount["Male"].count++ : genderCount["Female"].count++;
+            });
+
+            // initializing the bar
+            genderCount = d3.values(genderCount);
+
+            const max = d3.max(genderCount, d => d.count);
+
+            draw(genderCount, 0, max, chart2);
+        });
+
+    </script>
 </body>
-
-<script>
-    // Constants
-    var margin = { top: 20, right: 30, bottom: 70, left: 100 },
-        width = 560 - margin.left - margin.right,
-        height = 520 - margin.top - margin.bottom;
-
-    // Chart SVGs
-    var chart1 = d3.select("#chart1")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .attr("class", "bar-chart")
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    var chart2 = d3.select("#chart2")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .attr("class", "bar-chart")
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    // Linear Gradient
-    const defs = chart2.append('defs');
-    const bgGradient = defs
-        .append('linearGradient')
-        .attr('id', 'bg-gradient')
-        .attr('gradientTransform', 'rotate(90)');
-    bgGradient
-        .append('stop')
-        .attr('stop-color', '#fafafa')
-        .attr('offset', '20%');
-    bgGradient
-        .append('stop')
-        .attr('stop-color', 'lightblue')
-        .attr('offset', '100%');
-
-    // Draw Axes and Bars
-    const draw = (arr, min = 0, max, svg) => {
-        const x = d3.scaleBand()
-            .rangeRound([0, width])
-            .padding(0.1)
-            .domain(arr.map(d => d.gender));
-
-        const y = d3.scaleLinear()
-            .rangeRound([height, 0])
-            .domain([min, max]);
-
-        const entries = svg.selectAll("g")
-            .data(genderCount)
-            .enter()
-            .append("g");
-
-        entries.each(function (d) {
-            const entry = d3.select(this);
-            entry.append("rect")
-                .attr("class", "bar")
-                .attr("x", x(d.gender))
-                .attr("y", y(d.count))
-                .attr("height", height - y(d.count))
-                .attr("width", x.bandwidth())
-                .style("fill", d => d.color)
-        })
-
-        svg.append("g")
-            .attr("transform", "translate(0," + (height) + ")")
-            .call(d3.axisBottom(x));
-
-        svg.append("g")
-            .call(d3.axisLeft(y));
-
-        drawAxisLabels(svg);
-    }
-
-    const drawAxisLabels = (svg) => {
-        svg.append("text")
-            .attr("class", "x-label")
-            .attr("text-anchor", "middle")
-            .attr("x", width / 2)
-            .attr("y", height + margin.bottom * 0.65)
-            .text("Artists Gender");
-
-        svg.append("text")
-            .attr("class", "y-label")
-            .attr("text-anchor", "middle")
-            .attr("transform", "rotate(-90)")
-            .attr("x", -height / 2)
-            .attr("y", -margin.left * 0.6)
-            .text("Number of Artists");
-    }
-
-    // Reading the data
-    data = d3.json('Artworks-bc.json').then(data => {
-        genderCount = {
-            Male: { gender: "Male", count: 0, color: "lightblue" },
-            Female: { gender: "Female", count: 0, color: "lightblue" }
-        };
-        // Data processing
-        data.forEach(d => {
-            const gender = d.Gender;
-
-            // Count entries with gender of (Male), (male). Account for group artworks
-            const maleCount = gender.Male
-            genderCount["Male"].count += maleCount;
-
-            // Count entries with gender of (Female), (female). Account for group artworks
-            const femaleCount = gender.Female
-            genderCount["Female"].count += femaleCount;
-        });
-        // initializing the bars
-        genderCount = d3.values(genderCount);
-
-        const max = d3.max(genderCount, d => d.count);
-
-        draw(genderCount, 18000, max, chart1);
-    });
-
-    // Reading the data
-    data2 = d3.json('Artists.json').then(data => {
-        genderCount = {
-            Male: { gender: "Male", count: 0, color: "url(#bg-gradient)" },
-            Female: { gender: "Female", count: 0, color: "lightblue" },
-        };
-
-        // Data processing
-        data.forEach(d => {
-            const gender = d.Gender;
-
-            if (gender != null)
-                gender == "Male" ? genderCount["Male"].count++ : genderCount["Female"].count++;
-        });
-
-        // initializing the bar
-        genderCount = d3.values(genderCount);
-
-        const max = d3.max(genderCount, d => d.count);
-
-        draw(genderCount, 0, max, chart2);
-    });
-
-</script>
 
 </html>

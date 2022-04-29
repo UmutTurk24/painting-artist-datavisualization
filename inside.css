@@ -1,0 +1,31 @@
+.in-header {
+    width: 100%;
+    margin-block-start: -1em;
+    padding-block: 1em;
+}
+
+.in-footer {
+    width: 100%;
+    margin-block-start: 1em;
+    margin-block-end: -1em;
+    padding-block: 1em;
+}
+
+.in-container {
+    display: flex;
+    gap: 0.5em;
+    margin-block: 0;
+}
+
+.in-container > * {
+    line-height: 0;
+}
+
+.home-link {
+    color: black;
+}
+
+.home-link:hover, 
+.home-link:focus {
+    color: white;
+}

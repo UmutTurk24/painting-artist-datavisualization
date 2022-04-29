@@ -263,7 +263,7 @@ span.emoji {
 
 
 svg {
-    z-index: -1;
+    /* z-index: -1; */
     position: relative;
     /* visibility: hidden; */
 }
