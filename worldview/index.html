@@ -32,7 +32,7 @@
             of origin of the artworks exhibited in a choropleth map,
             where color indicates the number of artworks whose artists
             are born in each country – i.e. the United States has a
-            value of 53,820, meaning that there are 53,820 artworks in
+            value of 62,525, meaning that there are 53,820 artworks in
             the MoMA database who have at least one artist from the US.
             In this examination, we hope to understand the inequities
             in representation at MoMA through factors other than
@@ -175,7 +175,7 @@
                 return "<strong>Country: </strong><span class='details'>" +
                     d.properties.name + "<br></span>" +
                     "<strong>Artworks from " + d.properties.name + ": </strong><span class='details'>"
-                    + (d.count ? format(Math.pow(10, d.count)) : "0") + "</span>";
+                    + (d.count ? format(d.count) : "0") + "</span>";
         })
 
         var width = 960,
@@ -205,18 +205,19 @@
 
         Promise.all([
             d3.json('world.geo.json'),
-            d3.json('Country-count.json')
+            d3.json('Artworks-circles.json')
         ])
             .then(([world, countries]) => {
                 world.features.forEach(d => {
                     if (countries[d.properties.name]) {
-                        d.count = Math.log10(countries[d.properties.name].count)
+                        d.count = countries[d.properties.name].count
                     } else {
                         d.count = 0;
                     }
                 });
 
-                color.domain([0, d3.max(world.features, d => d.count)])
+                const max = d3.max(world.features, d => d.count)
+                color.domain([0, Math.log10(max)])
 
                 var countryShapes = map.append("g")
                     .attr("class", "countries")
@@ -224,7 +225,7 @@
                     .data(world.features)
                     .enter().append("path")
                     .attr("d", path)
-                    .style("fill", d => d.count ? color(d.count) : "white")
+                    .style("fill", d => d.count ? color(Math.log10(d.count)) : "white")
                     .style('stroke', 'grey')
                     .style('stroke-width', .3)
                     .on('mouseover', function (d) {
