@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../favicon.svg" type="image/x-icon">
-    <title>Worldview</title>
+    <title>Artwork Types</title>
     <!-- CSS -->
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="../inside.css">
@@ -16,7 +16,41 @@
 
 
 </head>
+<style>
 
+.index-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0em;
+    }
+
+    .bar1 {
+        fill: #6F257F;
+    }
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #D4D8DA;
+        stroke-width: 1px;
+        shape-rendering: crispEdges;
+    }
+
+    .x path {
+        display: none;
+    }
+
+    .toolTip {
+        position: absolute;
+        display: none;
+        min-width: 80px;
+        height: auto;
+        background: none repeat scroll 0 0 #ffffff;
+        border: 1px solid #6F257F;
+        padding: 14px;
+        text-align: center;
+    }
+</style>
 <body>
     <header class="pink-bg in-header">
         <div class="container in-container">
@@ -28,10 +62,18 @@
     <div class="container">
         <h1>MoMA Over Art</h1>
         <p>
-            Explanation
+            As part of exploring the dataset we have, it is also important to look at what type
+            of artworks has been acquired in MoMA. Previously we have seen that there was a huge 
+            discrepency between the number of acquired artworks made by males and females, but we
+            wanted to look at how wide the gap is for each type of artwork. From the timeseries graph
+            we have seen a rise in number of acquired artworks made by females, and there are type of 
+            artworks that are relatively new. Below you can see the normalized chart of type of 
+            artworks in MoMA over time. You can click on them to see detailed information on
+            how many artworks have been acquired based on male and female artists. 
+
         </p>
         <div class="mytype" id="worldChart">
-            <svg id="chart"></svg>
+            <div id="my_dataviz"></div>
             <div class="loader" id="loader1">
                 <div class="loader-inner">
                     <div class="loader-line-wrap">
@@ -52,9 +94,17 @@
                 </div>
             </div>
         </div>
-        <p>
-            More Text
-        </p>
+
+        <div class = "index-grid">
+            <div>
+                <p id="leftTitle"></p>
+                <svg id="viz1" width="500" height="450"></svg>
+            </div>
+            <div>
+                <p id="rightTitle"></p>
+                <svg id="viz2" width="500" height="450"></svg>
+            </div>
+        </div>
     </div>
     <footer class="pink-bg in-footer">
         <div class="container footer">
@@ -66,20 +116,299 @@
     </footer>
 
     <!-- JS Scripts -->
-    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <script src="https://d3js.org/queue.v1.min.js"></script>
+    <script src="https://d3js.org/topojson.v1.min.js"></script>
+    <script src="https://d3js.org/d3-color.v1.min.js"></script>
+    <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src="https://d3js.org/d3-queue.v3.min.js"></script>
+    <script src="d3-tip.js"></script>
 
+    <script>
+        
+        var tip = d3.tip()
+            .attr('class', 'd3-tip')
+            .offset([200, 0])
+            .html(function (d) {
+                let className = d._groups[0][0].getAttribute("class");
+                return "<strong>Type: </strong><span class='details'>" + className + "</span>";
+            })
+
+        var margin = { top: 30, right: 0, bottom: 60, left: 70 },
+            width = 900 - margin.left - margin.right,
+            height = 560 - margin.top - margin.bottom;
+
+        // Chart SVGs
+        var svg = d3.select("#my_dataviz")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        svg.call(tip);
+        // Reading the data
+        data = d3.json('Artworks-types.json').then(data => {
+            data = d3.values(data)
+            data.sort((a, b) => d3.ascending(a.Date, b.Date))
+            const mySet1 = new Set();
+            data.forEach(d => {
+                mySet1.add(d.Type);
+            });
+
+            var mygroups = ["Architecture & Design", "Digital Media & Performance", "Work on Paper", "Installation", "Photography", "Painting"]
+
+            var mygroup = Array.from(Array(mygroups.length).keys())
+            for (let value of mygroup) {
+                value += 1;
+            }
+
+            var sumstat = d3.nest()
+                .key(function (d) { return d.Date; })
+                .entries(data);
+
+            // list of group names
+            var stackedData = d3.stack()
+                .keys(mygroup)
+                .value(function (d, key) {
+                    if (d.values[key] != undefined) {
+                        return d.values[key].percent
+                    }
+                    else {
+                        return 0
+                    }
+                })
+                (sumstat)
+
+            // console.log(stackedData)
+
+            //   // Add X axis --> it is a date format
+            var x = d3.scaleLinear()
+                .domain(d3.extent(data, function (d) { return d.Date; }))
+                .range([0, width]);
+
+            svg.append("g")
+                .attr("transform", "translate(0," + height + ")")
+                .call(d3.axisBottom(x).ticks(5));
+
+            var y = d3.scaleLinear()
+                .domain([0, d3.max(data, function (d) { return +d.percent; })])
+                .range([height, 0]);
+
+            svg.append("g")
+                .call(d3.axisLeft(y));
+
+            var color = d3.scaleOrdinal()
+                .domain(mygroups)
+                // .range(['#377eb8','#fc8d62','#8da0cb','#e78ac3','#a6d854','#ffd92f','#66c2a5'])
+                .range(d3.schemeSet3)
+
+            svg
+                .selectAll("mylayers")
+                .data(stackedData)
+                .enter()
+                .append("path")
+                .attr('class', function (d, i) {
+                    return d[9].data.values[i].Type
+                })
+                .style("fill", function (d) { name = mygroups[d.key - 1]; return color(name); })
+                .attr("d", d3.area()
+                    .x(function (d, i) { return x(d.data.key); })
+                    .y0(function (d) { return y(d[0]); })
+                    .y1(function (d) { return y(d[1]); })
+                ).on('mouseover', function (d) {
+                    tip.show(d3.select(this));
+                    d3.select(this)
+                        .style("stroke", "grey")
+                        .style("stroke-width", 2)
+                        .raise();
+                })
+                .on('mouseout', function (d) {
+                    tip.hide(d);
+                    d3.select(this)
+                        .style("stroke", "grey")
+                        .style("stroke-width", 0.3)
+                })
+                .on('click', function(d,i) {
+                    curType = d[9].data.values[i].Type;
+                    addTitles(curType);
+                    createGraph(curType);
+                });
+        })
+    
+    </script>
+
+    <script>
+        function addTitles (artType){
+            var textLeft = document.getElementById("leftTitle");
+            var textRight = document.getElementById("rightTitle");
+
+            textLeft.innerText = "Female: " + artType;
+            textRight.innerText = "Male: " + artType;
+        }
+
+        function createGraph(artType) {
+            var svg1 = d3.select("#viz1"),
+                margin = { top: 20, right: 20, bottom: 20, left: 40 },
+                width = 500 - margin.left - margin.right,
+                height = 450 - margin.top - margin.bottom;
+            svg1.call(tip);
+
+            var svg2 = d3.select("#viz2"),
+                margin = { top: 20, right: 20, bottom: 20, left: 40 },
+                width = 500 - margin.left - margin.right,
+                height = 450 - margin.top - margin.bottom;
+            svg2.call(tip);
+
+            if(document.getElementById("leftChart")) {
+                console.log('here');
+                var delChart = document.getElementById("leftChart");
+                delChart.remove();
+                var delChart = document.getElementById("rightChart");
+                delChart.remove();
+                delChart = null
+            }
+            var tooltip = d3.select("body").append("div").attr("class", "toolTip");
+
+            var x1 = d3.scaleLinear().range([0, width]);
+            var x2 = d3.scaleLinear().range([0, width]);
+            var y = d3.scaleBand().range([height, 0]);
+
+
+            var gp1 = svg1.append("g")
+                .attr("id", "leftChart")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            var gp2 = svg2.append("g")
+                .attr("id", "rightChart")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            // artType = "Photography";
+
+            data1 = d3.json('Artworks-types-gender.json').then(data => {
+                data = d3.values(data)
+                data.sort((a, b) => d3.descending(a.Date, b.Date))
+
+                femaleMax = d3.max(data, function (d) {
+                    if (d.Type === artType) {
+                        return d.femaleCount;
+                    }
+                });
+
+                maleMax = d3.max(data, function (d) {
+                    if (d.Type === artType) {
+                        return d.maleCount;
+                    }
+                });
+
+                maxScale = femaleMax > maleMax ? femaleMax : maleMax;
+
+                x1.domain([maxScale, 0]);
+
+                x2.domain([0, maxScale]);
+
+                y.domain(data.map(function (d) { return d.Date; }))
+                    .padding(0.2);
+
+                gp1.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(d3.axisBottom(x1).ticks(10).tickFormat(function (d) { return parseInt(d); }).tickSizeInner([-height]));
+
+                gp2.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(d3.axisBottom(x2).ticks(10).tickFormat(function (d) { return parseInt(d); }).tickSizeInner([-height]));
+
+                // gp1.append("g")
+                //     .attr("class", "y axis")
+                //     .call(d3.axisLeft(y).ticks(10));
+
+                gp2.append("g")
+                    .attr("class", "y axis")
+                    .style("margin-right", "10px")
+                    .call(d3.axisLeft(y)
+                    .tickFormat(function(d, i) {
+                        return i % 4 === 0 ? d : null;
+                    }));
+
+                gp1.selectAll(".bar")
+                    .data(data)
+                    .enter().append("rect")
+                    .attr("class", "bar")
+                    .attr("x", function (d) {
+                        if (d.Type === artType) {
+                            return x1(d.maleCount);
+                        }
+                    })
+                    .attr("height", y.bandwidth())
+                    .attr("y", function (d) { return y(d.Date); })
+                    .attr("width", function (d) {
+                        let mCount = 0;
+                        if (d.Type === artType) {
+                            mCount = d.maleCount;
+                        }
+                        return width - x1(mCount);
+                    })
+                    .on("mousemove", function (d) {
+                        tooltip
+                            .style("left", d3.event.pageX - 50 + "px")
+                            .style("top", d3.event.pageY - 70 + "px")
+                            .style("display", "inline-block")
+                            .html((d.Date) + "<br>" + "Count: " + (d.maleCount));
+                    })
+                    .on("mouseout", function (d) { tooltip.style("display", "none"); });
+
+                gp2.selectAll(".bar")
+                    .data(data)
+                    .enter()
+                    .append("rect")
+                    .attr("class", "bar")
+                    .attr("x", 0)
+                    .attr("height", y.bandwidth())
+                    .attr("y", function (d) { return y(d.Date); })
+                    .attr("width", function (d) {
+                        let fCount = 0;
+                        if (d.Type === artType) {
+                            fCount = d.femaleCount;
+                        }
+                        return x2(fCount);
+                    })
+                    .on("mousemove", function (d) {
+                        tooltip
+                            .style("left", d3.event.pageX - 50 + "px")
+                            .style("top", d3.event.pageY - 70 + "px")
+                            .style("display", "inline-block")
+                            .html((d.Date) + "<br>" + "Count: " + (d.femaleCount));
+                    })
+                    .on("mouseout", function (d) { tooltip.style("display", "none"); });
+            });
+
+            gp1.selectAll("text")
+                .data(dataset)
+                .enter()
+                .append("text")
+                .text(function (d) {
+                    return d;
+                })
+
+            gp2.selectAll("text")
+                .data(dataset)
+                .enter()
+                .append("text")
+                .text(function (d) {
+                    return d;
+                })
+        }
+
+    </script>
     <!-- Loading -->
     <script>
         var chart1Exist = false;
-        var chart2Exist = false;
 
         const interval = window.setInterval(function () {
-            if (document.getElementsByClassName("countries") && !chart1Exist) {
-                var svgContainer = document.getElementById("worldChart");
-                var svgSelf = document.getElementById("map");
-                svgContainer.style.border = "none";
-                svgSelf.style.border = "dashed 2px #333";
-                svgSelf.style.borderRadius = "10px";
+            if (document.getElementsByClassName("Work On Paper") && !chart1Exist) {
+
                 chart1Exist = true;
                 var myloader1 = document.getElementById("loader1");
                 setTimeout(() => {
@@ -91,21 +420,7 @@
                     $(myloader1).fadeOut(1000);
                 });
             }
-
-            if (document.getElementsByClassName("circleMap") && !chart2Exist) {
-                chart2Exist = true;
-                var myloader2 = document.getElementById("loader2");
-                setTimeout(() => {
-                    myloader2.remove();
-                    var svz = document.getElementById("circles");
-                    svz.style.zIndex = 0;
-                }, "1000");
-                $(window).on('load', function () {
-                    $(myloader2).fadeOut(1000);
-                });
-            }
-
-            if (chart2Exist && chart1Exist) {
+            if (chart1Exist) {
                 clearInterval(interval); // thanks @Luca D'Amico
             }
         }, 500);
