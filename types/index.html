@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../favicon.svg" type="image/x-icon">
+    <title>Worldview</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../inside.css">
+    <link rel="stylesheet" href="tip.css">
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+</head>
+
+<body>
+    <header class="pink-bg in-header">
+        <div class="container in-container">
+            <a class="block-link home-link" href="../">
+                <h2><span class="emoji">👈</span>&nbsp; Home</h2>
+            </a>
+        </div>
+    </header>
+    <div class="container">
+        <h1>MoMA Over Art</h1>
+        <p>
+            Explanation
+        </p>
+        <div class="mytype" id="worldChart">
+            <svg id="chart"></svg>
+            <div class="loader" id="loader1">
+                <div class="loader-inner">
+                    <div class="loader-line-wrap">
+                        <div class="loader-line"></div>
+                    </div>
+                    <div class="loader-line-wrap">
+                        <div class="loader-line"></div>
+                    </div>
+                    <div class="loader-line-wrap">
+                        <div class="loader-line"></div>
+                    </div>
+                    <div class="loader-line-wrap">
+                        <div class="loader-line"></div>
+                    </div>
+                    <div class="loader-line-wrap">
+                        <div class="loader-line"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p>
+            More Text
+        </p>
+    </div>
+    <footer class="pink-bg in-footer">
+        <div class="container footer">
+            <p>
+                <span>CSC362 Spring 2022</span>
+                <span>Miguel Donado, Umut Türk</span>
+            </p>
+        </div>
+    </footer>
+
+    <!-- JS Scripts -->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+    <!-- Loading -->
+    <script>
+        var chart1Exist = false;
+        var chart2Exist = false;
+
+        const interval = window.setInterval(function () {
+            if (document.getElementsByClassName("countries") && !chart1Exist) {
+                var svgContainer = document.getElementById("worldChart");
+                var svgSelf = document.getElementById("map");
+                svgContainer.style.border = "none";
+                svgSelf.style.border = "dashed 2px #333";
+                svgSelf.style.borderRadius = "10px";
+                chart1Exist = true;
+                var myloader1 = document.getElementById("loader1");
+                setTimeout(() => {
+                    myloader1.remove();
+                    var svz = document.getElementById("map");
+                    svz.style.zIndex = 0;
+                }, "1000");
+                $(window).on('load', function () {
+                    $(myloader1).fadeOut(1000);
+                });
+            }
+
+            if (document.getElementsByClassName("circleMap") && !chart2Exist) {
+                chart2Exist = true;
+                var myloader2 = document.getElementById("loader2");
+                setTimeout(() => {
+                    myloader2.remove();
+                    var svz = document.getElementById("circles");
+                    svz.style.zIndex = 0;
+                }, "1000");
+                $(window).on('load', function () {
+                    $(myloader2).fadeOut(1000);
+                });
+            }
+
+            if (chart2Exist && chart1Exist) {
+                clearInterval(interval); // thanks @Luca D'Amico
+            }
+        }, 500);
+
+    </script>
+</body>
+
+</html>
