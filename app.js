@@ -126,7 +126,7 @@ const typeMap = (type) => {
 	if (type === "Painting") newType = "Painting"
 	if (work_paper.includes(type)) newType = "Work on Paper"
 	if (digimedia.includes(type)) newType = "Digital Media & Performance"
-	if (installation.includes(type)) newType = "Digital Media & Performance"
+	if (installation.includes(type)) newType = "Installation"
 	if (photo.includes(type)) newType = "Photography"
 
 	return newType
@@ -137,8 +137,8 @@ var years = new Set()
 
 
 result.forEach(d => {
-	const countryMap = { "Austrian": "Austria", "French": "France", "American": "United States", "German": "Germany", "Dutch": "Netherlands", "Italian": "Italy", "Swedish": "Sweden", "British": "United Kingdom", "Japanese": "Japan", "Argentine": "Argentina", "Brazilian": "Brazil", "Swiss": "Switzerland", "Luxembourgish": "Luxembourg", "Spanish": "Spain", "Polish": "Poland", "Russian": "Russia", "Iranian": "Iran", "Canadian": "Canada", "Belgian": "Belgium", "Norwegian": "Norway", "Finnish": "Finland", "Danish": "Denmark", "Czech": "Czech Rep.", "Moroccan": "Morocco", "Colombian": "Colombia", "Australian": "Australia", "Chinese": "China", "Mexican": "Mexico", "Yugoslav": whatYugov(d.Artist), "Scottish": "Scotland", "Hungarian": "Hungary", "Slovenian": "Slovenia", "Chilean": "Chile", "Latvian": "Latvia", "Greek": "Greece", "Israeli": "Israel", "Czechoslovakian": "Czech Rep.", "Icelandic": "Iceland", "Croatian": "Croatia", "Ukrainian": "Ukraine", "Cuban": "Cuba", "Romanian": "Romania", "Venezuelan": "Venezuela", "Uruguayan": "Uruguay", "Irish": "Ireland", "Georgian": "Georgian", "Thai": "Thailand", "Algerian": "Algeria", "Guatemalan": "Guatemala", "Indian": "India", "Costa Rican": "Costa Rica", "Korean": "Korea", "Ethiopian": "Ethiopia", "Kuwaiti": "Kuwait", "Haitian": "Haiti", "South African": "South Africa", "Zimbabwean": "Zimbabwe", "Portuguese": "Portugal", "Panamanian": "Panama", "Ecuadorian": "Ecuador", "Peruvian": "Peru", "Congolese": "Dem. Rep. Congo", "Malian": "Mali", "Turkish": "Turkey", "Cambodian": "Cambodia", "Bosnian": "Bosnia", "Canadian Inuit": "Canada", "Slovak": "Slovakia", "Estonian": "Estonia", "Pakistani": "Pakistan", "Bulgarian": "Bulgaria", "Bolivian": "Bolivia", "Palestinian": "Palestine", "Taiwanese": "Taiwan", "Paraguayan": "Paraguay", "Nicaraguan": "Nicaragua", "Tunisian": "Tunisia", "Sudanese": "Sudan", "Tanzanian": "Tanzania", "Guyanese": "Guyana", "Senegalese": "Senegal", "Bahamian": "Bahamas", "New Zealander": "New Zealand", "Lebanese": "Lebanon", "Cypriot": "Cyprus", "Kenyan": "Kenya", "Nigerian": "Nigeria", "Egyptian": "Egypt", "Albanian": "Albania", "Azerbaijani": "Azerbaijan", "Ivorian": "Cóte d'Ivoire", "Malaysian": "Malaysia", "Serbian": "Serbia", "Singaporean": "Singapore", "Lithuanian": "Lithuania", "Tajik": "Tajikistan", "Namibian": "Namibia", "Native American": "United States", "Ghanaian": "Ghana", "Afghan": "Afghanistan", "Kyrgyzstani": "Kyrgyzstan", "Welsh": "Wales", "Vietnamese": "Vietnam", "Ugandan": "Uganda", "English": "United Kingdom", "Cameroonian": "Cameroon", "Mauritanian": "Mauritania", "Syrian": "Syria", "Iraqi": "Iraq", "Saudi Arabian": "Saudi Arabia", "Kazakhstani": "Kazakhstan", "Rwandan": "Rwanda", "Indonesian": "Indonesia", "Burkinabe": "Burkina Faso", "Macedonian": "Macedonia", "Filipino": "Philippines", "Mozambican": "Mozambique", "Angolan": "Angola", "Puerto Rican": "Puerto Rico", "Catalan": "Spain"}
-	/*	genderCount = {
+	const countryMap = { "Austrian": "Austria", "French": "France", "American": "United States", "German": "Germany", "Dutch": "Netherlands", "Italian": "Italy", "Swedish": "Sweden", "British": "United Kingdom", "Japanese": "Japan", "Argentine": "Argentina", "Brazilian": "Brazil", "Swiss": "Switzerland", "Luxembourgish": "Luxembourg", "Spanish": "Spain", "Polish": "Poland", "Russian": "Russia", "Iranian": "Iran", "Canadian": "Canada", "Belgian": "Belgium", "Norwegian": "Norway", "Finnish": "Finland", "Danish": "Denmark", "Czech": "Czech Rep.", "Moroccan": "Morocco", "Colombian": "Colombia", "Australian": "Australia", "Chinese": "China", "Mexican": "Mexico", "Yugoslav": whatYugov(d.Artist), "Scottish": "Scotland", "Hungarian": "Hungary", "Slovenian": "Slovenia", "Chilean": "Chile", "Latvian": "Latvia", "Greek": "Greece", "Israeli": "Israel", "Czechoslovakian": "Czech Rep.", "Icelandic": "Iceland", "Croatian": "Croatia", "Ukrainian": "Ukraine", "Cuban": "Cuba", "Romanian": "Romania", "Venezuelan": "Venezuela", "Uruguayan": "Uruguay", "Irish": "Ireland", "Georgian": "Georgian", "Thai": "Thailand", "Algerian": "Algeria", "Guatemalan": "Guatemala", "Indian": "India", "Costa Rican": "Costa Rica", "Korean": "Korea", "Ethiopian": "Ethiopia", "Kuwaiti": "Kuwait", "Haitian": "Haiti", "South African": "South Africa", "Zimbabwean": "Zimbabwe", "Portuguese": "Portugal", "Panamanian": "Panama", "Ecuadorian": "Ecuador", "Peruvian": "Peru", "Congolese": "Dem. Rep. Congo", "Malian": "Mali", "Turkish": "Turkey", "Cambodian": "Cambodia", "Bosnian": "Bosnia", "Canadian Inuit": "Canada", "Slovak": "Slovakia", "Estonian": "Estonia", "Pakistani": "Pakistan", "Bulgarian": "Bulgaria", "Bolivian": "Bolivia", "Palestinian": "Palestine", "Taiwanese": "Taiwan", "Paraguayan": "Paraguay", "Nicaraguan": "Nicaragua", "Tunisian": "Tunisia", "Sudanese": "Sudan", "Tanzanian": "Tanzania", "Guyanese": "Guyana", "Senegalese": "Senegal", "Bahamian": "Bahamas", "New Zealander": "New Zealand", "Lebanese": "Lebanon", "Cypriot": "Cyprus", "Kenyan": "Kenya", "Nigerian": "Nigeria", "Egyptian": "Egypt", "Albanian": "Albania", "Azerbaijani": "Azerbaijan", "Ivorian": "Cóte d'Ivoire", "Malaysian": "Malaysia", "Serbian": "Serbia", "Singaporean": "Singapore", "Lithuanian": "Lithuania", "Tajik": "Tajikistan", "Namibian": "Namibia", "Native American": "United States", "Ghanaian": "Ghana", "Afghan": "Afghanistan", "Kyrgyzstani": "Kyrgyzstan", "Welsh": "Wales", "Vietnamese": "Vietnam", "Ugandan": "Uganda", "English": "United Kingdom", "Cameroonian": "Cameroon", "Mauritanian": "Mauritania", "Syrian": "Syria", "Iraqi": "Iraq", "Saudi Arabian": "Saudi Arabia", "Kazakhstani": "Kazakhstan", "Rwandan": "Rwanda", "Indonesian": "Indonesia", "Burkinabe": "Burkina Faso", "Macedonian": "Macedonia", "Filipino": "Philippines", "Mozambican": "Mozambique", "Angolan": "Angola", "Puerto Rican": "Puerto Rico", "Catalan": "Spain" }
+	genderCount = {
 		Male: 0,
 		Female: 0
 	};
@@ -154,107 +154,110 @@ result.forEach(d => {
 	const femaleCount = (gender.match(/(Female)/g) || []).length
 		+ (gender.match(/(female)/g) || []).length
 
-	genderCount.Female += femaleCount; */
+	genderCount.Female += femaleCount;
 
-	// const year = d.DateAcquired;
-	// var parsedYear = 0;
+	const year = d.DateAcquired;
+	var parsedYear = 0;
 
-	// if (year && year !== undefined) {
-	// 	if (year.includes("/")) {
-	// 		var yearEnd = year.substring(year.length - 2, year.length)
-	// 		var start = yearEnd >= 20 ? "19" : "20"
-	// 		var yearStr = start + yearEnd;
-	// 		parsedYear = parseInt(yearStr)
-	// 	} else {
-	// 		year.replace("-", "")
-	// 		parsedYear = parseInt(year.substring(4))
-	// 	}
-	// }
-
-	const nations = d.Nationality !== undefined ? d.Nationality : "";
-	var countries = []
-	var nation = "";
-	var start = false;
-	for (ch of nations) {
-		if (start && ch === ")") {
-			if (countryMap[nation])
-				countries.push(countryMap[nation]);
-			nation = "";
-			start = false;
+	if (year && year !== undefined) {
+		if (year.includes("/")) {
+			var yearEnd = year.substring(year.length - 2, year.length)
+			var start = yearEnd >= 20 ? "19" : "20"
+			var yearStr = start + yearEnd;
+			parsedYear = parseInt(yearStr)
+		} else {
+			year.replace("-", "")
+			parsedYear = parseInt(year.substring(4))
 		}
-		if (start) {
-			nation += ch;
-		}
-		if (ch === "(") start = true;
 	}
+
+	// const nations = d.Nationality !== undefined ? d.Nationality : "";
+	// var countries = []
+	// var nation = "";
+	// var start = false;
+	// for (ch of nations) {
+	// 	if (start && ch === ")") {
+	// 		if (countryMap[nation])
+	// 			countries.push(countryMap[nation]);
+	// 		nation = "";
+	// 		start = false;
+	// 	}
+	// 	if (start) {
+	// 		nation += ch;
+	// 	}
+	// 	if (ch === "(") start = true;
+	// }
 
 	const type = typeMap(d.Classification);
 
-	if (countries.length /*parsedYear > 1000 type !== "" gender !== undefined &&  */) {
-		for (let country of countries) {
-			newresult.push({
-				// Gender: genderCount,
-				// Date: parsedYear,
-				Nationality: country
-				// Type: type
-			})
-		}
-		// years.add(parsedYear)
+	if (type !== "" && parsedYear > 1000 && gender !== undefined /*parsedYear > 1000 countries.length gender !== undefined &&  */) {
+		// for (let country of countries) {
+		// }
+		newresult.push({
+			Gender: genderCount,
+			Date: parsedYear,
+			// Nationality: country
+			Type: type
+		})
+		years.add(parsedYear)
 	}
 });
 
 
-const countryC = {}
-
-newresult.forEach(d => {
-	if (!countryC[d.Nationality]) {
-		countryC[d.Nationality] = {
-			Country: d.Nationality,
-			count: 0
-		}
-	}
-	countryC[d.Nationality].count++;
-});
-
-world.features.forEach(d => {
-	if (countryC[d.properties.name]) {
-		countryC[d.properties.name].continent = d.properties.continent
-	} 
-});
-
-// var yearTotals = {}
-// var classObj = {}
-// const label = (year, type) => {
-// 	return year + "_" + type;
-// }
-
-// for (year of years) {
-// 	yearTotals[year] = 0
-// }
-
+// const countryC = {}
 
 // newresult.forEach(d => {
-// 	yearTotals[d.Date]++;
-// })
-// console.log(yearTotals);
-
-// newresult.forEach(d => {
-// 	let key = label(d.Date, d.Type)
-// 	if (!classObj[key]) {
-// 		classObj[key] = {
-// 			Date: d.Date,
-// 			Type: d.Type,
+// 	if (!countryC[d.Nationality]) {
+// 		countryC[d.Nationality] = {
+// 			Country: d.Nationality,
 // 			count: 0
 // 		}
 // 	}
-// 	classObj[key].count++;
+// 	countryC[d.Nationality].count++;
 // });
 
-// Object.keys(classObj).forEach(d => {
-// 	// console.log(d, classObj[d].Date, classObj[d].count, yearTotals[classObj[d].Date])
-// 	classObj[d].percent = 100 * classObj[d].count / yearTotals[classObj[d].Date]
-// })
+// world.features.forEach(d => {
+// 	if (countryC[d.properties.name]) {
+// 		countryC[d.properties.name].continent = d.properties.continent
+// 	} 
+// });
+
+var yearTotals = {}
+var classObj = {}
+
+const label = (year, type) => {
+	return year + "_" + type;
+}
+
+for (year of years) {
+	yearTotals[year] = 0
+}
+
+newresult.forEach(d => {
+	let key = label(d.Date, d.Type)
+	if (!classObj[key]) {
+		classObj[key] = {
+			Date: d.Date,
+			Type: d.Type,
+			count: 0,
+			femaleCount: 0
+		}
+	}
+	classObj[key].count++;
+	classObj[key].femaleCount += d.Gender.Female;
+});
+
+console.log(yearTotals);
+newresult.forEach(d => {
+	yearTotals[d.Date]++;
+})
+
+Object.keys(classObj).forEach(d => {
+	// console.log(d, classObj[d].Date, classObj[d].count, yearTotals[classObj[d].Date])
+	classObj[d].percent = 100 * classObj[d].count / yearTotals[classObj[d].Date]
+	classObj[d].maleCount = classObj[d].count - classObj[d].femaleCount
+})
 // Convert the resultant array to json and
 // generate the JSON output file.
-let json = JSON.stringify(countryC);
-fs.writeFileSync('Artworks-country-circle-pack.json', json);
+let json = JSON.stringify(classObj);
+fs.writeFileSync('Artworks-types.json', json);
