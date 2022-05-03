@@ -23,6 +23,7 @@
 
 .home-link {
     color: black;
+    width: fit-content;
 }
 
 .home-link:hover, 

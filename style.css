@@ -35,7 +35,7 @@ p {
 }
 
 .bar-chart {
-    border: dashed 2px #333;
+    border: solid 1px #aaa;
     border-radius: 10px;
     background: white;
     margin-top: 1em;
@@ -266,7 +266,7 @@ span.emoji {
 
 
 .mytype {
-    border: dashed 2px #333;
+    border: solid 1px #aaa;
     border-radius: 10px;
     background: white;
     margin-top: 1em;

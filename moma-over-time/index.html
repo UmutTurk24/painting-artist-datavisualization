@@ -155,7 +155,7 @@
 
 
     // Constants
-    var margin = { top: 20, right: 20, bottom: 70, left: 80 },
+    var margin = { top: 30, right: 20, bottom: 70, left: 90 },
       width = 950 - margin.left - margin.right,
       height = 560 - margin.top - margin.bottom;
 
@@ -180,7 +180,7 @@
 
     var x = d3.scaleTime().range([0, width]),
       y = d3.scaleLinear().range([height, 0]),
-      color = d3.scaleOrdinal(d3.schemeSet2);
+      color = d3.scaleOrdinal(d3.schemeDark2);
 
     var line = d3
       .line()
