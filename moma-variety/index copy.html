@@ -56,8 +56,8 @@
         <div id="my_dataviz"></div>
         <!-- <h3 style="text-align: center;">Bar-Chart 1</h3> -->
         <!-- <svg id = "viz1" width="960" height="500"></svg> -->
-        <svg id="viz1" width="960" height="500"></svg>
-        <svg id="viz2" width="960" height="500"></svg>
+        <svg id="viz1" width="860" height="400"></svg>
+        <svg id="viz2" width="860" height="400"></svg>
     </div>
     <script>
 
@@ -175,18 +175,17 @@
 
     <script>
         function createGraph(artType) {
-            
 
             var svg1 = d3.select("#viz1"),
                 margin = { top: 20, right: 20, bottom: 20, left: 40 },
-                width = 960 - margin.left - margin.right,
-                height = 500 - margin.top - margin.bottom;
+                width = 860 - margin.left - margin.right,
+                height = 400 - margin.top - margin.bottom;
             svg1.call(tip);
 
             var svg2 = d3.select("#viz2"),
                 margin = { top: 20, right: 20, bottom: 20, left: 40 },
-                width = 960 - margin.left - margin.right,
-                height = 500 - margin.top - margin.bottom;
+                width = 860 - margin.left - margin.right,
+                height = 400 - margin.top - margin.bottom;
 
             svg2.call(tip);
 

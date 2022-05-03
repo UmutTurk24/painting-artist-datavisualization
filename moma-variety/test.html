@@ -1,84 +1,149 @@
-<!-- Code from d3-graph-gallery.com -->
 <!DOCTYPE html>
 <meta charset="utf-8">
-
-<!-- Load d3.js -->
-<script src="https://d3js.org/d3.v4.js"></script>
-<!-- https://d3js.org/d3.v5.min.js -->
-<!-- Create a div where the graph will take place -->
-<div id="my_dataviz"></div>
+<style>
+body {
+  margin: 15px;
+  background-color: #F1F3F3    
+}
+.bar {
+	fill: #6F257F;
+}
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #D4D8DA;
+  stroke-width: 1px;
+  shape-rendering: crispEdges;
+}
+.x path {
+	display: none;
+}
+.toolTip {
+	position: absolute;
+  display: none;
+  min-width: 80px;
+  height: auto;
+  background: none repeat scroll 0 0 #ffffff;
+  border: 1px solid #6F257F;
+  padding: 14px;
+  text-align: center;
+}
+</style>
 
 <body>
 
+  <div class = "container">
+    <svg id = "viz1" width="960" height="500"></svg>
+    <svg id = "viz2" width="960" height="500"></svg>
 
-<script>
+  </div>
 
-// set the dimensions and margins of the graph
-var margin = {top: 10, right: 30, bottom: 30, left: 60},
-    width = 460 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
-
-// append the svg object to the body of the page
-var svg = d3.select("#my_dataviz")
-  .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform",
-          "translate(" + margin.left + "," + margin.top + ")");
-
-//Read the data
-d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/5_OneCatSevNumOrdered.csv", function(data) {
-  // group the data: one array for each value of the X axis.
-  console.log(data)
-  var sumstat = d3.nest()
-    .key(function(d) { return d.year;})
-    .entries(data);
-  console.log(sumstat)
-  // Stack the data: each group will be represented on top of each other
-  var mygroups = ["Helen", "Amanda", "Ashley"] // list of group names
-  var mygroup = [1,2,3] // list of group names
-  // console.log(sumstat)
-  var stackedData = d3.stack()
-    .keys(mygroup)
-    .value(function(d, key){
-      return d.values[key].n
-    })
-    (sumstat)
-    // console.log(stackedData)
-  // Add X axis --> it is a date format
-  var x = d3.scaleLinear()
-    .domain(d3.extent(data, function(d) {  return d.year; }))
-    .range([ 0, width ]);
-  svg.append("g")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x).ticks(5));
-
-  // Add Y axis
-  var y = d3.scaleLinear()
-    .domain([0, d3.max(data, function(d) { return +d.n; })*1.2])
-    .range([ height, 0 ]);
-  svg.append("g")
-    .call(d3.axisLeft(y));
-
-  // color palette
-  var color = d3.scaleOrdinal()
-    .domain(mygroups)
-    .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999'])
-
-  // Show the areas
-  svg
-    .selectAll("mylayers")
-    .data(stackedData)
-    .enter()
-    .append("path")
-      .style("fill", function(d) { name = mygroups[d.key-1] ; console.log(mygroups[d.key-1]); return color(name); })
-      .attr("d", d3.area()
-        .x(function(d, i) { console.log(d) ; return x(d.data.key); })
-        .y0(function(d) {  return y(d[0]); })
-        .y1(function(d) { return y(d[1]); })
-    )
-
-})
-</script>
 </body>
+
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+var svg = d3.select("#viz1"),
+    margin = {top: 20, right: 20, bottom: 30, left: 80},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var svg1 = d3.select("#viz2"),
+    margin = {top: 20, right: 20, bottom: 30, left: 80},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+  
+var tooltip = d3.select("body").append("div").attr("class", "toolTip");
+
+var x = d3.scaleLinear().range([0, width]);
+var x1 = d3.scaleLinear().range([0, width]);
+var y = d3.scaleBand().range([height, 0]);
+
+var g = svg.append("g")
+		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    var g1 = svg1.append("g")
+		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  
+
+d3.json("data.json", function(error, data) {
+  	if (error) throw error;
+  
+  	data.sort(function(a, b) { return a.value - b.value; });
+  
+  	x1.domain([0, d3.max(data, function(d) { return d.value; })]);
+    x.domain([d3.max(data, function(d) { return d.value; }),0]);
+    y.domain(data.map(function(d) { return d.area; })).padding(0.1);
+
+    g.append("g")
+        .attr("class", "x axis")
+       	.attr("transform", "translate(0," + height + ")")
+      	.call(d3.axisBottom(x).ticks(5).tickFormat(function(d) { return parseInt(d / 1000); }).tickSizeInner([-height]));
+
+        g1.append("g")
+        .attr("class", "x axis")
+       	.attr("transform", "translate(0," + height + ")")
+      	.call(d3.axisBottom(x1).ticks(5).tickFormat(function(d) { return parseInt(d / 1000); }).tickSizeInner([-height]));
+
+    g.append("g")
+        .attr("class", "y axis")
+        .call(d3.axisLeft(y));
+
+        g1.append("g")
+        .attr("class", "y axis")
+        .call(d3.axisLeft(y));
+
+    g.selectAll(".bar")
+        .data(data)
+      .enter().append("rect")
+        .attr("class", "bar")
+        // .attr("x", 0)
+        .attr("x", function(d){return x(d.value)})
+        .attr("height", y.bandwidth())
+        .attr("y", function(d) { return y(d.area); })
+        // .attr("width", function(d) { return x(d.value); })
+        .attr("width", function(d) { return width - x(d.value); })
+        .on("mousemove", function(d){
+            tooltip
+              .style("left", d3.event.pageX - 50 + "px")
+              .style("top", d3.event.pageY - 70 + "px")
+              .style("display", "inline-block")
+              .html((d.area) + "<br>" + "£" + (d.value));
+        })
+    		.on("mouseout", function(d){ tooltip.style("display", "none");});
+
+        g1.selectAll(".bar")
+        .data(data)
+      .enter().append("rect")
+        .attr("class", "bar")
+        .attr("x", 0)
+        // .attr("x", function(d){return x(d.value)})
+        .attr("height", y.bandwidth())
+        .attr("y", function(d) { return y(d.area); })
+        .attr("width", function(d) { return x1(d.value); })
+        // .attr("width", function(d) { return width - x(d.value); })
+        .on("mousemove", function(d){
+            tooltip
+              .style("left", d3.event.pageX - 50 + "px")
+              .style("top", d3.event.pageY - 70 + "px")
+              .style("display", "inline-block")
+              .html((d.area) + "<br>" + "£" + (d.value));
+        })
+    		.on("mouseout", function(d){ tooltip.style("display", "none");});
+});
+
+g.selectAll("text")
+			   .data(dataset)
+			   .enter()
+			   .append("text")
+			   .text(function(d) {
+			   		return d;
+			   })
+
+         g1.selectAll("text")
+			   .data(dataset)
+			   .enter()
+			   .append("text")
+			   .text(function(d) {
+			   		return d;
+			   })
+</script>
