@@ -278,3 +278,7 @@ svg {
 #leftTitle, #rightTitle, #categoryTitle {
     text-align: center;
 }
+
+#my_dataviz path {
+    cursor: pointer;
+}
