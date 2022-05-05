@@ -17,15 +17,10 @@
 
 </head>
 <style>
-
-.index-grid {
+    .index-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 0em;
-    }
-
-    .bar1 {
-        /* fill: #6F257F; */
     }
 
     .axis path,
@@ -51,6 +46,7 @@
         text-align: center;
     }
 </style>
+
 <body>
     <header class="pink-bg in-header">
         <div class="container in-container">
@@ -62,14 +58,22 @@
     <div class="container">
         <h1>MoMA Over Art</h1>
         <p>
-            As part of exploring the dataset we have, it is also important to look at what type
-            of artworks has been acquired in MoMA. Previously we have seen that there was a huge 
-            discrepency between the number of acquired artworks made by males and females, but we
-            wanted to look at how wide the gap is for each type of artwork. From the timeseries graph
-            we have seen a rise in number of acquired artworks made by females, and there are type of 
-            artworks that are relatively new. Below you can see the normalized chart of type of 
-            artworks in MoMA over time. You can click on them to see detailed information on
-            how many artworks have been acquired based on male and female artists. 
+            As part of exploring the dataset we have, it is also important
+            to look at what type
+            of artworks has been acquired in MoMA. Previously we have seen
+            that there was a huge
+            discrepency between the number of acquired artworks made by
+            males and females, but we
+            wanted to look at how wide the gap is for each type of artwork.
+            From the timeseries graph
+            we have seen a rise in number of acquired artworks made by
+            females, and there are type of
+            artworks that are relatively new. Below you can see the
+            normalized chart of type of
+            artworks in MoMA over time. You can click on them to see
+            detailed information on
+            how many artworks have been acquired based on male and female
+            artists.
 
         </p>
         <div class="mytype" id="worldChart">
@@ -95,7 +99,8 @@
             </div>
         </div>
 
-        <div class = "index-grid">
+        <h1 id="categoryTitle"></h1>
+        <div class="index-grid">
             <div>
                 <p id="leftTitle"></p>
                 <svg id="viz1" width="500" height="450"></svg>
@@ -126,7 +131,7 @@
     <script src="d3-tip.js"></script>
 
     <script>
-        
+
         var tip = d3.tip()
             .attr('class', 'd3-tip')
             .offset([200, 0])
@@ -147,6 +152,7 @@
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
         svg.call(tip);
+
         // Reading the data
         data = d3.json('Artworks-types.json').then(data => {
             data = d3.values(data)
@@ -184,7 +190,7 @@
 
             //   // Add X axis --> it is a date format
             var x = d3.scaleLinear()
-                .domain(d3.extent(data, function (d) { return d.Date; }))
+                .domain(d3.extent(data, d => d.Date))
                 .range([0, width]);
 
             svg.append("g")
@@ -192,7 +198,7 @@
                 .call(d3.axisBottom(x).ticks(5));
 
             var y = d3.scaleLinear()
-                .domain([0, d3.max(data, function (d) { return +d.percent; })])
+                .domain([0, d3.max(data, d => d.percent)])
                 .range([height, 0]);
 
             svg.append("g")
@@ -200,10 +206,7 @@
 
             var color = d3.scaleOrdinal()
                 .domain(mygroups)
-                // .range(['#e78ac3', '#a6d854', '#8da0cb','#377eb8', '#ffd92f', '#fc8d62', '#377eb8' ])
-                // .range(['#377eb8','#fc8d62','#8da0cb','#e78ac3','#a6d854','#ffd92f','#66c2a5'])
-                .range(d3.schemeSet3)
-                // console.log(color);
+                .range(d3.schemeSet2)
             svg
                 .selectAll("mylayers")
                 .data(stackedData)
@@ -212,7 +215,7 @@
                 .attr('class', function (d, i) {
                     return d[9].data.values[i].Type
                 })
-                .style("fill", function (d) { name = mygroups[d.key - 1]; return color(name); })
+                .style("fill", d => color(mygroups[d.key - 1]))
                 .attr("d", d3.area()
                     .x(function (d, i) { return x(d.data.key); })
                     .y0(function (d) { return y(d[0]); })
@@ -227,26 +230,27 @@
                 .on('mouseout', function (d) {
                     tip.hide(d);
                     d3.select(this)
-                        .style("stroke", "grey")
                         .style("stroke-width", 0.3)
                 })
-                .on('click', function(d,i) {
+                .on('click', function (d, i) {
                     var curColor = color(mygroups[d.key - 1]);
                     curType = d[9].data.values[i].Type;
                     addTitles(curType);
                     createGraph(curType, curColor);
                 });
         })
-    
+
     </script>
 
     <script>
-        function addTitles (artType){
+        function addTitles(artType) {
             var textLeft = document.getElementById("leftTitle");
             var textRight = document.getElementById("rightTitle");
+            var catTitle = document.getElementById("categoryTitle");
 
-            textLeft.innerText = "Female: " + artType;
-            textRight.innerText = "Male: " + artType;
+            textLeft.innerText = "Male";
+            textRight.innerText = "Female";
+            catTitle.innerText = artType;
         }
 
         function createGraph(artType, barColor) {
@@ -262,14 +266,14 @@
                 height = 450 - margin.top - margin.bottom;
             svg2.call(tip);
 
-            if(document.getElementById("leftChart")) {
-                console.log('here');
+            if (document.getElementById("leftChart")) {
                 var delChart = document.getElementById("leftChart");
                 delChart.remove();
                 var delChart = document.getElementById("rightChart");
                 delChart.remove();
                 delChart = null
             }
+
             var tooltip = d3.select("body").append("div").attr("class", "toolTip");
 
             var x1 = d3.scaleLinear().range([0, width]);
@@ -284,8 +288,6 @@
             var gp2 = svg2.append("g")
                 .attr("id", "rightChart")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-            // artType = "Photography";
 
             data1 = d3.json('Artworks-types-gender.json').then(data => {
                 data = d3.values(data)
@@ -323,12 +325,12 @@
                     .call(d3.axisBottom(x2).ticks(10).tickFormat(function (d) { return parseInt(d); }).tickSizeInner([-height]));
 
                 gp2.append("g")
-                    .attr("class", "y axis")
+                    .attr("class", "y-axis")
                     .style("margin-right", "10px")
                     .call(d3.axisLeft(y)
-                    .tickFormat(function(d, i) {
-                        return i % 4 === 0 ? d : null;
-                    }));
+                        .tickFormat(function (d, i) {
+                            return i % 4 === 0 ? d : null;
+                        }));
 
                 gp1.selectAll(".bar")
                     .data(data)
@@ -383,22 +385,6 @@
                     })
                     .on("mouseout", function (d) { tooltip.style("display", "none"); });
             });
-
-            gp1.selectAll("text")
-                .data(dataset)
-                .enter()
-                .append("text")
-                .text(function (d) {
-                    return d;
-                })
-
-            gp2.selectAll("text")
-                .data(dataset)
-                .enter()
-                .append("text")
-                .text(function (d) {
-                    return d;
-                })
         }
 
     </script>
@@ -414,7 +400,6 @@
                 setTimeout(() => {
                     myloader1.remove();
                     var svz = document.getElementById("map");
-                    svz.style.zIndex = 0;
                 }, "1000");
                 $(window).on('load', function () {
                     $(myloader1).fadeOut(1000);

@@ -276,9 +276,12 @@ svg {
     position: relative;
 }
 
-
 .caption {
     font-size: 1em;
     color: gray;
+    text-align: center;
+}
+
+#leftTitle, #rightTitle, #categoryTitle {
     text-align: center;
 }
