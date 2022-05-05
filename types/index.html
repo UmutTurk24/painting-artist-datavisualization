@@ -63,19 +63,21 @@
             Previously we have seen that there was a huge discrepancy
             between the number of acquired artworks made by males and
             females, but we wanted to look at how wide the gap is for each
-            type of artwork. In the time series, we have seen a small spikes
+            type of artwork. In the time series, we have seen a small
+            spikes
             in the number of acquired artworks made by female artists.
             Knowing that there are types of artworks that are relatively
-            new like Digital Media & Performance, we wanted to see which artwork
-            types these spikes might belong to. Below you can see the 
-            normalized distribution of artwork types at the MoMA over time. 
+            new like Digital Media & Performance, we wanted to see which
+            artwork
+            types these spikes might belong to. Below you can see the
+            normalized distribution of artwork types at the MoMA over time.
         </p>
         <p>
             Click on any category to see the
             detailed, year-by-year gender distribution of artists in this
             category.
         </p>
-        
+
         <div class="mytype" id="worldChart">
             <div id="my_dataviz"></div>
             <div class="loader" id="loader1">
@@ -103,53 +105,42 @@
         <div class="index-grid">
             <div>
                 <p id="leftTitle"></p>
-                <svg id="viz1" width="500" height="450"></svg>
+                <svg id="viz1"></svg>
             </div>
             <div>
                 <p id="rightTitle"></p>
-                <svg id="viz2" width="500" height="450"></svg>
+                <svg id="viz2"></svg>
             </div>
         </div>
 
         <p>
-            Overall for each artwork type, male artwork acquisation is higher than 
-            female artwork acquisation. 
-        </p>
-        <p> 
-            One of the things we have done to create the normalized distribution 
-            of artwork types was to group each artwork type under certain names. 
-            There were 26 artwork types listed on the dataset, which would make 
-            the graph visually too confusing. By grouping certain artworks, we 
-            were able to have a general understanding of each type of artwork and 
-            analyze the male/female differences.  
+            Overall for each artwork type, male artwork acquisation is
+            higher than
+            female artwork acquisation.
         </p>
         <p>
-            We have also seen that even though there were relatively new artwork 
-            types like Installation and Digital Media & Performance, number of acquisations 
-            from male artists were still significantly higher than female artists. There 
-            are not any type of artwork that we could say the number of artworks made by female artists 
-            MoMA had were close to number of artworks made by male artists. 
-        </p>
-        <h2>Concluding Remarks</h3>
-        <p>
-            After creating all of the visualizations and exploring the dataset we had 
-            on MoMA artwork acquisation, we have seen a tendency towards acquiring works of
-            male artists more than female artists. We already knew that the number of works of
-            male artists would be higher than the number of works of female artists. We have 
-            confirmed our overall bias with the barcharts. Later, we have also seen this trend 
-            existing over time in our time-series graph. The most valuable inference we could do 
-            with time-series graph was looking at the number of acquisation at each year and 
-            see the differences in spikes between male and female. Especially at the year of the 
-            fire, we have seen male artwork acquisation almost exclusively. 
-            These tendencies were an indicator of a bias towards artists' gender and their representation in MoMA. 
+            One of the things we have done to create the normalized
+            distribution
+            of artwork types was to group each artwork type under certain
+            names.
+            There were 26 artwork types listed on the dataset, which would
+            make
+            the graph visually too confusing. By grouping certain artworks,
+            we
+            were able to have a general understanding of each type of
+            artwork and
+            analyze the male/female differences.
         </p>
         <p>
-            When we looked at demographics of the artists, we were able to see variaty of 
-            nationalities but number of people from each nationality was skewed towards European
-            contries and US. And lastly, we looked at male and female artwork acquisation for each type 
-            and seen how big is the gap for certain artworks like Painting. If we had more time, it would be interesting to look at number of artwork 
-            type each nationalty has across years. Maybe we could then see a smaller gap in representation  
-            for certain nationalities. 
+            We have also seen that even though there were relatively new
+            artwork
+            types like Installation and Digital Media & Performance, number
+            of acquisations
+            from male artists were still significantly higher than female
+            artists. There
+            are not any type of artwork that we could say the number of
+            artworks made by female artists
+            MoMA had were close to number of artworks made by male artists.
         </p>
     </div>
     <footer class="pink-bg in-footer">
@@ -295,16 +286,19 @@
         }
 
         function createGraph(artType, barColor) {
-            var svg1 = d3.select("#viz1"),
-                margin = { top: 20, right: 20, bottom: 20, left: 40 },
+            var margin = { top: 20, right: 20, bottom: 20, left: 40 },
                 width = 500 - margin.left - margin.right,
                 height = 450 - margin.top - margin.bottom;
+
+            var svg1 = d3.select("#viz1")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", width + margin.top + margin.bottom);
+
             svg1.call(tip);
 
-            var svg2 = d3.select("#viz2"),
-                margin = { top: 20, right: 20, bottom: 20, left: 40 },
-                width = 500 - margin.left - margin.right,
-                height = 450 - margin.top - margin.bottom;
+            var svg2 = d3.select("#viz2")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", width + margin.top + margin.bottom);
             svg2.call(tip);
 
             if (document.getElementById("leftChart")) {
