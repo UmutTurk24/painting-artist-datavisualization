@@ -7,3 +7,5 @@ Created by Miguel Donado and Umut Turk.
 Go to index.html (homepage) to start. 
 The website investigates artist diversity in MoMA via different data visualizations. 
 There are 4 different visualizations, all for different purposes. Feel free to play with them and explore!
+
+You can find the assignment directions in the pdfs: "CSC_362__Time_Series.pdf" and "BarChartAssignment.pdf"
